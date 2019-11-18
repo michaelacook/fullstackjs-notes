@@ -1,0 +1,2 @@
+# Full-stack JavaScript Notes
+This is a collection of notes on courses from the Full-stack JavaScript and React.js tracks at [Treehouse](https://www.teamtreehouse.com/). The collection is not complete, as there are a number of basic courses that I have taken but not made notes on. The set of notes is a work in progress and will be updated regularly to reflect my progress as I work through the courses. Please feel free to use and distribute these notes for your own purposes!
