@@ -206,3 +206,45 @@ testString.replace(regex, 'hot');
 "hotdog"
 ```
 * The string `corndog` is checked against the regular expression, and the part of it that matches is replaced with the string `hot`
+
+### Flags
+* Flags modify the way a regular expression behaves
+* Overrides a default behaviour: similar to command line options
+* `i` - Case-insensitive (ignore case)
+* `g` - Global (find all matches contained in a string rather than stopping at the first match)
+* `m` - Multiline (treat linebreaks like new lines rather than treating them as part of the string)
+* Syntax: `/regex/flag`
+* Flags can be combined in any order
+
+## Reformating input
+* Parentheses are not only for specifying groups but also can be used to capture the parts of the strings they match
+* This allows you to replace patterns in a string
+* Unlike standard indexing of iterables in JavaScript, indexes for captured strings in regular expressions start from 1 rather than 0
+* To write a regular expression that captures substrings from its matches, surround the part of the pattern you wish to capture in parentheses `/(\w)(\w)(\w)/` will capture three alphanumeric characters
+* The characters or substrings are then accessible by their index preceded by a `$` character
+* E.g:
+
+```
+let string = 'abc';
+
+string.replace(/(\w)(\w)(\w)/, '$3 $2 $1');
+"c b a"
+```
+
+* (note: to use a literal `$` character in a replacement string you need to use `$$` which will render as a single `$`)
+
+* More complex example:
+
+
+```js
+const formatTelephone = text => {
+    const regex = /^\D*(\d{3})\D*(\d{3})\D*(\d{4})\D*$/;
+    return text.replace(regex, `($1) $2-$3`);
+}
+
+const reformatted = formatTelephone("5555555555");
+console.log(reformatted);
+"(555) 555-5555"
+```
+
+* (note: text editors often allow you to search your codebase using regular expressions. This is potentially very useful!)
