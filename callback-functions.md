@@ -29,6 +29,7 @@ executeCallback(sayHello);
 
 ## Anonymous functions
 * A function without a name
+* Passing anonymous functions as callbacks is commonly done and is a more explicit way of writing callbacks
 * Usually an anonymous function is supplied as an expression passed to another function as a callback
 * E.g:
 
