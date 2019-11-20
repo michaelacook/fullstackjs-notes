@@ -48,3 +48,127 @@ executeCallback(() => console.log('Goodbye'));
 ```
 
 * The same rules for constructing arrow functions discussed in [ES2015](ES2015.md) apply here
+
+
+## `setTimeout()` and `setInterval()`
+* Callbacks are handy for timers, since timers are meant to perform a certain action once, or repeatedly, after a given or variable amount of time
+* E.g:
+
+```js
+const surpriseSection = document.getElementById('surprise');
+
+const randomTime = Math.random() * 6000;
+
+setTimeout(() => surpriseSection.textContent = '🎉 Surprise! 🎉', randomTime);
+```
+
+* A more complex example using the `setInterval()` timer:
+
+```js
+// A simple 24 hour JavaScript clock
+
+const clockSection = document.getElementById("clock");
+
+const getTime = () => {
+    const pad = number => {
+        if (number < 10) {
+            return "0" + number;
+        } else {
+            return number;
+        }
+    }
+
+    const now = new Date();
+
+    const hh = pad(now.getHours());
+    const mm = pad(now.getMinutes());
+    const ss = pad(now.getSeconds());
+
+    return `${hh}:${mm}:${ss}`;
+}
+
+setInterval(() => clockSection.textContent = getTime(), 1000);
+```
+
+* note: the instructor for the course doesn't think an anonymous function is appropriate for the clock application because the clock will only start one second after page load. I disgree and find nothing undesirable about this, but the next example will show the method the instructor uses:
+
+```js
+const runClock = () => clockSection.textContent = getTime();
+
+tickTock();
+setInterval(runClock, 1000);
+```
+
+* In the example above, the callback is defined and not passed as an anonymous function, allowing you to call the function once at page load, and then repeatedly on an interval after. Some might find this more desirable, but it depends on your needs or point of view
+
+## Callbacks with arguments
+* Callback functions can specify any number of parameters
+* Syntax:
+
+```js
+const foo = (arg1) => // do something
+
+const execute = (arg2, callback) => callback(arg2);
+
+execute(arg, foo);
+```
+
+* A more complex example:
+
+```js
+// variables pointing to DOM elements
+const div1 = document.getElementById('first');
+const div2 = document.getElementById('second');
+const div3 = document.getElementById('third');
+
+// functions applying styles to a DOM element passed as an argument
+const makeRed = element => element.style.backgroundColor = "red";
+
+const makeBlue = element => element.style.backgroundColor = "blue";
+
+// function executing a callback with an argument
+const addStyleToElement = (element, callback) => callback(element);
+
+// execution of the callback
+addStyleToElement(div1, makeRed);
+```
+
+### Callbacks and the DOM
+* Callbacks are frequently used in programming DOM interactivity
+* The `element.addEventListener(eventType, callback)` method accepts an event object and a callback function
+* A more complex example:
+
+```js
+const nameInput = document.getElementById('name');
+const messageTextArea = document.getElementById('message');
+
+nameInput.addEventListener('click', e => {
+    e.target.className = 'highlight';
+});
+
+messageTextArea.addEventListener('click', e => {
+    e.target.className = 'highlight';
+});
+```
+* You may also see the old syntax in legacy code:
+
+```js
+nameInput.addEventListener('click', function(e) {
+    e.target.className = 'highlight';
+});
+```
+* Here `e` is the variable pointing to the `event` object
+
+* A more DRY example:
+
+```js
+const nameInput = document.getElementById('name');
+const messageTextArea = document.getElementById('message');
+
+const focusHandler = e => e.target.className = 'highlight';
+const blurHandler = e => e.target.className = '';
+
+nameInput.addEventListener('focus', focusHandler);
+nameInput.addEventListener('blur', blurHandler);
+```
+* The above example avoids repetition of the first example and represents a better approach
