@@ -10,6 +10,7 @@
     * opening files in node.js
     * Lots of other scenarios - callbacks are common!
 * Asynchronous programming allows for flexibility and speed in building user interafaces
+* (note: some parts of these notes assume basic knowledge of the DOM and built-in JavaScript DOM manipulation methods)
 
 ## What is a callback?
 * A function passed to another function as a parameter
