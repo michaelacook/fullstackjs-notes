@@ -5,7 +5,7 @@
 
 ## `for` loops vs. `forEach` loops
 * `forEach` is a loop that accesses each item in an array
-* Syntax: `array.forEach(item => callback);`
+* Syntax: `array.forEach(callback);`
 * E.g:
 
 ```js
