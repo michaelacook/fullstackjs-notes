@@ -137,3 +137,167 @@ console.log(total);
 ```
 
 * The 0 after the callback is the initialValue argument, which sets the initial value of the accumulator. If no initialValue is given, then the initial value is the first element in the given array and iteration will skip over it and begin at the second index value
+
+
+## Combining array methods
+
+* `map()` and `filter()` can be chained together to be useful for more complex iteration tasks
+* For example, transforming an array with `map()` and then filtering it with `filter()`
+* E.g:
+
+```js
+const arr = [1,2,3];
+
+const smallerArr = arr.filter(number => number !== 2).map(number => number + 1);
+
+console.log(smallerArr); // => [2,4]
+```
+* As long as an array method returns an array, you can chain link another array method onto the end if need be. This is referred to as **method chaining**
+
+#### Using `reduce()` to return a new object from an array of objects
+
+```js
+const users = [
+  {name: 'Samir', age: 27},
+  {name: 'Angela', age: 13},
+  {name: 'Beatrice', age: 49}
+];
+
+const usersObject = users.reduce((acc, person) => {
+    acc[person.name] = person.age;
+    return acc;
+}, new Object());
+
+console.log(usersObject);
+{ Samir: 27, Angela: 13, Beatrice: 49 }
+```
+
+* Note that returning the accumulator in the same line that the accumulator is added to gives an unexpected result. To avoid this, perform your action on the accumulator first, then return on the next line
+
+#### Using `filter()` and `map()` to return an array of objects
+
+```js
+const userNames = ['Samir', 'Angela', 'Beatrice', 'Shaniqua', 'Marvin', 'Sean'];
+    // Result: [{name: 'Samir'}, {name: 'Shaniqua'}, {name:'Sean'}];
+
+const newUserNames = userNames
+    .filter(name => name.charAt(0) === 'S')
+    .map(person => ({name: person}));
+
+console.log(newUserNames);
+[ { name: 'Samir' }, { name: 'Shaniqua' }, { name: 'Sean' } ]
+```
+
+* Note that when returning an object-literal inside the callback, it is necessary to surround it in parentheses otherwise JavaScript cannot distinguish between the object-literal and the function body and will return `undefined`
+
+#### Using `filter()` and `reduce()` to get the highest number of a subset
+
+```js
+const products = [
+  { name: 'hard drive', price: 59.99 },
+  { name: 'lighbulbs', price: 2.59 },
+  { name: 'paper towels', price: 6.99 },
+  { name: 'flatscreen monitor', price: 159.99 },
+  { name: 'cable ties', price: 19.99 },
+  { name: 'ballpoint pens', price: 4.49 },
+];
+
+    // Result: { name: 'paper towels', price: 6.99 }
+
+  const highest = products
+    .filter(product => product.price < 10)
+    .reduce((acc, product) => {
+        if (acc.price > product.price) {
+            return acc;
+        } else { return product; }
+    });
+
+console.log(highest);
+{ name: 'paper towels', price: 6.99 }
+```
+
+## Flattening arrays
+* It is common to come across arrays that contain arrays, and it is also common to need to 'flatten' the array or place all the items in each internal array into one big array
+* There are many ways to do this, but `reduce()` works well
+
+```js
+const movies = [
+  ['The Day the Earth Stood Still', 'Superman', 'Ghostbusters'],
+  ['Finding Dory'],
+  ['Jaws', 'On the Waterfront']
+]
+
+const flattenedMovies = movies.reduce((acc, cur) => [...acc, ...cur], []);
+
+console.log(flattenedMovies);
+["The Day the Earth Stood Still", "Superman", "Ghostbusters", "Finding Dory", "Jaws", "On the Waterfront"]
+```
+* In the example above, at each iteration the interal array is spread out and placed inside the accumulator, eliminating the internal arrays
+
+#### `...` (spread) operator
+* Put simply, the spread operator puts the elements of an array into another array, allowing you to avoid adding an array as itself an element in an array
+* E.g:
+
+```js
+const arr1 = [1, 2, 3, 4, 5];
+
+const arr2 = [];
+
+arr2.push(...arr1);
+
+console.log(arr2);
+[1, 2, 3, 4, 5]
+```
+
+* The spread operator has a lot of applications with arrays and objects. [Read the documentation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax)
+
+* A more complex example:
+
+```js
+
+const users = [
+  {
+    name: 'Samir',
+    age: 27,
+    favoriteBooks:[
+      {title: 'The Iliad'},
+      {title: 'The Brothers Karamazov'}
+    ]
+  },
+  {
+    name: 'Angela',
+    age: 33,
+    favoriteBooks:[
+      {title: 'Tenth of December'},
+      {title: 'Cloud Atlas'},
+      {title: 'One Hundred Years of Solitude'}
+    ]
+  },
+  {
+    name: 'Beatrice',
+    age: 42,
+    favoriteBooks:[
+      {title: 'Candide'}
+    ]
+  }
+];
+
+const favouriteBooks = users
+    .map(user => user.favoriteBooks.map(book => book.title))
+    .reduce((acc, cur) => [...acc, ...cur], []);
+
+console.log(favouriteBooks);
+["The Iliad", "The Brothers Karamazov", "Tenth of December", "Cloud Atlas", "One Hundred Years of Solitude", "Candide"]
+```
+
+* First the part of the example, the array contained as a property in each member object is extracted and put into a new array using `map`. This produces a multidimensional array:
+
+```js
+[
+    ["The Iliad", "The Brothers Karamazov"],
+    ["Tenth of December", "Cloud Atlas", "One Hundred Years of Solitude"],
+    ["Candide"]
+]
+```
+
+* The second part of the example then flattens the resulting multidimensional array
