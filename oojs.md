@@ -97,6 +97,7 @@ class Pet
 
 * Setters receive a value and perform logic on that value, then update an existing property with that value, or generate a new property
 * Setters always receive exactly one argument that is then used to set a property or generate a new property
+* Setters are not called using regular function syntax but instead the function is executed when the property is set using the regular dot notation
 * The name of a property on an object can never be the same as the name of a getter or setter. Therefore:
 
 ```js
@@ -109,9 +110,13 @@ set owner(owner) {
 * The property that points to the return value of a setter is called a **backing property** and by convention starts with `_` but then has the same name as the setter:
 
 ```js
+// Create the setter:
 set owner(owner) {
     this._owner = owner;
 }
+
+// Call the setter:
+object.owner = 'Your Name';
 ```
 
 * Setters are called using dot notation and appear to work the same as manually setting a property on an object
@@ -129,3 +134,6 @@ get owner() {
 * In object-oriented programming, programs are composed of objects interacting with other objects
 * An property of an object can contain another object
 * For example, in the above example, the owner of the pet is set to a string value with a setter, but we could make a new class representing the owner, instantiate it, and pass the owner object to the pet object to set the owner object as the owner property on the pet object
+
+## Inheritance
+* Inheritance is covered in [ES2015.md](ES2015.md)
