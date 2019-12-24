@@ -1,7 +1,7 @@
 # Callback Functions in JavaScript
 * Callbacks are functions that are not called explicitly by the programmer, but by the computer at a future time
-* Synchronous programming: function executes immediately when it is called
-* Asynchronous programming: function executes at a later point in time when it is required
+* **Synchronous programming**: function executes immediately when it is called
+* **Asynchronous programming**: function executes at a later point in time when it is required
 * Asynchronous programming allows the computer to perform other tasks while waiting for an event to occur
 * Common uses for callbacks:
     * one-off and repeat timers
@@ -13,7 +13,7 @@
 * (note: some parts of these notes assume basic knowledge of the DOM and built-in JavaScript DOM manipulation methods)
 
 ## What is a callback?
-* A function passed to another function as a parameter
+* A function passed to another function as a parameter.
 * A regular function that can have any functionality
 * `executeCallBack(callBack);`
 * Notice no parentheses when the name of the callback is passed to another function. This is because the developer is not calling the function but instead giving the name of that function so that the function receiving the callback as an argument can execute the callback when needed
@@ -29,7 +29,7 @@ executeCallback(sayHello);
 ```
 
 ## Anonymous functions
-* A function without a name
+* A function without a name, often called a **lambda** in other languages
 * Passing anonymous functions as callbacks is commonly done and is a more explicit way of writing callbacks
 * Usually an anonymous function is supplied as an expression passed to another function as a callback
 * E.g:
@@ -42,7 +42,7 @@ executeFunction(function() {
 
 ### ES6 syntax
 * ES2015 allows for anonymous functions passed as callbacks to use the shortened arrow function syntax, making them more concise
-* E.g
+* E.g:
 
 ```js
 executeCallback(() => console.log('Goodbye'));
