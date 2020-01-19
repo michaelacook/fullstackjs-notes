@@ -1,0 +1,217 @@
+# Node.js Basics
+* Node is great for building scalable and high-performance server-side applications that are capable of handling a lot of connections
+* Node is a runtime environment that allows JavaScript to run outside of the web browser, making JavaScript available just about anywhere and capable of powering a wide variety of applications
+
+## Running Node
+* To run a JavaScript file with node, in Bash run `$ node [file.js]` and node will execute the file
+* To enter the node REPL (read-evaluate-print loop), in the terminal run `$ node` and to exit, use `Ctrl-C` twice, `Ctrl-D` once or `.exit`
+
+```js
+console.log('Hello, world!'); // log out messages
+console.error('Oops, something went wrong!'); // log out error message
+console.dir({ name: "Michael", age: 29 }); // prints human-readable data
+```
+`$ node example.js`
+```
+Hello, world!
+Oops, something went wrong!
+{ name: Michael, age: 29 }
+```
+
+### JavaScript outisde the browser
+* JavaScript's native objects are available in node because they are native to Javascript, but browser-specific host objects are not available, like the `Document`, `Window`, `History`, and `XMLHttpRequest`
+* Chrome's V8 JavaSript engine had great performance levels, so they took it out of the browser and stripped it of browser APIs and made it avaiable to run JavaScript anywhere
+* Node has host objects like `http`, `https`, `fs` (file system), `url`, `os` and more in it's environment
+
+### Why use node.js?
+* Most backend languages and frameworks are only capable of handling single tasks at a time, and are therefore slower and less efficient
+* These are known as blocking languages, since each request blocks the handling of other requests until finished
+* To get around this, developers usually need to host the web application across multiple servers in order to be able to handle many simultaneous requests
+* JavaScript and the node.js platform are non-blocking, so they require less resources and respond faster
+
+## Node globals
+* Global objects are accessible anywhere in any scope in the node runtime
+* [Read about node global objects](https://nodejs.org/dist/latest-v13.x/docs/api/globals.html)
+* The `console` object is a global object in the node runtime
+* The `require()` function is a global function used to import modules from external dependencies, internally from nodes modules, or modules we create 
+    * One useful module we can require is the `path` module which is useful for working with file paths
+    * The `__dirname` is a globally available path to the working directory, and `__filename` is a globally available path to the current file
+         * (note: these are not available in the repl)
+    * To get the base file name from a path we could do the following: 
+
+```js
+const path = require('path');
+
+console.log(`${path.basename(__filename)}`);
+```
+* `process` is another global in the node runtime
+    * it contains information about the current process and tools to help us work with it
+    * Read environment information, read env variables, communicate with the terminal via stdin and stdout processes, and exit the current process  
+    * You can access commandline arguments with `process.argv` and it will return an array that contains all the information (file paths, commandline args) that were used to run the process
+        * The first path you will see is the path to node itself, the second is the path to the current file, then any commandline arguments after that
+        * When capturing commandline arguments, using flags is useful. Consider the following program: 
+
+```js 
+const grab = flag => {
+    let indexAfterFlag = process.argv.indexOf(flag) + 1;
+    return process.argv[indexAfterFlag];
+}
+
+const greeting = grab("--greeting");
+const user = grab("--user");
+
+console.log(`${greeting} ${user}`);
+```
+* In the above program you can run `$ node [file] --user Michael --greeting "Hello there"` and the program will print "Hello there Michael" to the console 
+* commandline flags are a useful way to specify the role of commandline arguments
+
+### `stdout` and `stdin`
+* stdout is a property of the global `process` object and represents  a stream where data can be entered into a program
+* stdout is also a property of `process` that represents data output from a the current process
+* These streams have events that can be listened for, such as 'data' and 'exit'
+* See a small program that uses the standard output and standard input: 
+
+```js 
+const questions = [
+    "What is your name?",
+    "What would you rather be doing?",
+    "What is your preferred programming language?"
+];
+
+const ask = (i = 0) => {
+    console.clear();
+    process.stdout.write(`\n\n\n${questions[i]}`);
+    process.stdout.write(` > \n`);
+}
+
+
+const answers = [];
+
+ask();
+
+/* listener
+    the .on() method is now you listen for an event 
+    'data' is an event and it's when data gets passed to the program via 
+    the commandline or something else
+    data comes into the program in the form of a buffer, so it has to be 
+    converted into a string or other useful data type
+ */
+process.stdin.on('data', data => {
+    answers.push(`${data.toString().trim()}`);
+    if (answers.length < questions.length) {
+        ask(answers.length);
+    } else {
+        process.exit();
+    }
+});
+
+/* exit is a process event that can be listened for */
+process.on('exit', () => {
+    console.clear();
+    console.log('Your answers were: \n');
+    answers.forEach(answer => console.log(`${answer}\n`));
+});
+```
+
+* Asynchronous APIs like `setInterval` and `setTimeout` are also available globally in the node runtime
+
+## Node modules
+* Node has many internal modules you can work with. This set of notes covers core modules that are good for all developers working with node to be familiar with. Read the documentation and look through the examples to familiarize yourself
+
+### Core modules 
+* The `path` module is an important module for working with file and directory paths
+    * [`path` module docs](https://nodejs.org/dist/latest-v13.x/docs/api/path.html)
+* The `util` (utilities) module is another important module that provide a number of helper functions for node's own APIs
+    * [`util` module docs](https://nodejs.org/dist/latest-v13.x/docs/api/util.html)
+* The `v8` module is another core module that exposes APIs that are specific to the version of the V8 JavaScript engine built into node
+    * [`V8` docs](https://nodejs.org/dist/latest-v13.x/docs/api/v8.html#v8_v8)
+* The `readline` module provides an interface for reading data from a readable stream such as the standard input (`stdin`) one line at a time. It makes working with incoming data easier than using `process.argv`
+    * [`readline` docs](https://nodejs.org/dist/latest-v13.x/docs/api/readline.html#readline_readline)
+    * When using the `readline` module you must specify an interface and pass it an object that specifies the input and output to use
+    * To get data from the input and do something with it, use the `readlineInterface.question()` method which accepts data to be printed to the output first, and then a callback that handles the input
+    * An example of a little program written with `readline`: 
+
+    ```js 
+    const readline = require('readline');
+
+    // readline requires an interface
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+
+    rl.question("Do you think these notes are good? ", answer => {
+        console.log(`Your answer: ${answer}`);
+        process.exit();
+    });
+    ```
+* The `module` module is a core module for working with modules (lol)
+    * [`modules` docs](https://nodejs.org/dist/latest-v13.x/docs/api/modules.html#modules_modules)
+    * Node.js works on the module pattern where each file is treated as a single module 
+    * We can get modules by requiring them, but that's only half the pattern. We also have to export modules that will be used by other modules 
+    * You can use `module.export` and set it equal to anything within your file of any data type to make it available in another module 
+    * E.g: 
+    ```js 
+    function foo() {
+        console.log("Hello world!");
+    }
+
+    module.exports = foo;
+    ```
+    * you could also export an object of functions, single functions, arrays, classes, etc
+    * It is good practice to separate out reusable functions and classes into modules in order to maintain code readability, simplicity, and modularity
+* The `events` module is a core module for working with events 
+    * [`events` docs](https://nodejs.org/dist/latest-v13.x/docs/api/events.html#events_events)
+    * Node is event-driven; much of it's core API is built around an an architecture in which event emitter objects emit named events that are listened for by event listeners that run callbacks. This is what makes node non-blocking. The `events` module is very important because all other node objects that are able to emit events are instances of the `EventEmitter` class in the `events` module
+    * The `events` module allows you to create custom instances of the `EventEmitter` class that will emit a custom-named event, as well as specify listeners to handle that custom event
+    * E.g:
+
+    ```js
+    // import module
+    const { EventEmitter } = require('events');
+
+    // create a new instance of the EventEmitter class
+    const emitter = new EventEmitter();
+
+    // specify the name of the event to emit and what to do with it
+    emitter.on("customEvent", (message, user) => {
+        console.log(`${user}:${message}`);
+    });
+
+    process.stdin.on('data', data => {
+        const input = data.toString().trim();
+        if (input.toLowerCase() === 'exit') {
+            emitter.emit("customEvent", "bye!", "process");
+            process.exit();
+        }
+
+        // raise an event and specify the data available to the handler
+        emitter.emit("customEvent", input, "terminal");
+    });
+    ```
+    * You may find it very useful to create your own events that fire at certain times so that you can run callbacks when those events are raised
+
+
+## File system basics
+*
+
+## Files and streams
+* 
+
+
+### Getting help
+* [Node.js documentation](https://nodejs.org/en/docs/)
+
+### HTTP servers
+* To create an http server, require the `http` module and use the `createServer` method:
+
+```js
+const http = require('http');
+
+http.createServer((request, response) => {
+    response.writeHead(200, {'Content-Type': 'text/plain'}); // resp header
+    response.end('Hello World\n'); // resp body/payload
+})
+.listen(1337, '127.0.0.1'); // listen on port
+```
+* In `.listen` the values above are default but not needed. You can listen on any port, on any ip. Leave out the ip argument if needed and it will use the ip of the device
