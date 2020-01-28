@@ -131,3 +131,131 @@ const customMiddleware = (req, res, next) => {
     next();
 }
 ```
+
+## Processing data from the `request` object
+* Data can be sent to the server in a number of different ways, including in the body of a POST request, in url parameters, or in query strings attached to the url
+
+### POST body
+* As was already covered, in order to access the POST request payload or body, you must add the correct middleware to parse the post request body:
+
+    ```js 
+    // middleware for parsing http payloads
+    app.use(express.urlencoded());
+    ```
+* Once the middleware is installed, the body of a POST request is available via the `request.body` property and will be a key-value pair
+
+### Url parameters 
+* url parameters can be specified in a route using the following syntax:
+
+    ```js 
+    app.get('/users/:[nameOfParam]' ...)
+    ```
+* Whatever variable is passed in the url is then available on the `request` object through the `request.params` property. E.g:
+
+    ```js
+    app.get('/users/:name' ...);
+
+    const name = request.params.name;
+    ```
+
+### Query strings
+* Query strings are key-value pairs of variables attached to a url that are useful for sending non-sensitive data to the server
+* They take the form of `?key=value[&key=value]` at the end of a url 
+* E.g: `http://www.yourSite.com/?search=this+is+a+search+query`
+* Query strings are available on the request object via the `request.query` property
+* E.g:
+
+    ```js 
+    // /shoes?size=10&style=runner
+
+    const query = request.query;
+    const shoeSize = query.size;
+    const style = query.style;
+    ```
+
+## Cookies 
+* Cookies are a way to persist data between reloads 
+* Since HTTP is a stateless protocol, meaning it does not store anything about the what the user is doing on the site, it is sometimes necessary to use cookies so that the server can "remember" information about a user
+* Cookies are stored on the client's computer and are sent along with each http request so the server can read a client's cookies 
+* Cookies can be set on the `response` object using `response.cookie(key, value)`
+* E.g:
+
+    ```js
+    router.post('/hello', (req, res) => {
+        const username = req.body.username;
+        res.cookie('username', username);
+        res.redirect('/');
+    });
+    ```
+* In the above example a username is retrieved from a POST request, and then a cookie is sent to the client on a redirect. Then each time the client makes a request, that cookie will come along with the request and the server will be able to know who the user is by reading the cookie
+* To read a cookie, you first must install cookie parsing middleware, such as [cookie-parser](https://www.npmjs.com/package/cookie-parser)
+* Once cookie parsing middleware is installed and added to the application, you can get the values from a cookie sent to the server via the `request.cookies` property
+* E.g:
+
+    ```js 
+    response.cookie('username', 'superman');
+
+    console.log(request.cookies.username);
+    // superman
+    ```
+
+## Going further 
+* So far everything in these notes has been fairly surface level. It is enough to get started, but Express offers many methods on the `request` and `response` objects as well as many other features. Reading through the documentation is important 
+
+## MVC pattern 
+* For some reason one topic that doesn't seem to ever covered by the Express Basics course is the Model View Controller pattern. This is an extremely common (and very effective) architectural pattern in which the views (what your user interacts with), models (the "business logic" of the app, i.e database calls, application logic, etc) and controllers (components that handle incoming requests, send data to the correct models, then update the views) are all modular and separate 
+* In the MVC pattern, your views don't know anything about any other part of the app. They exist by themselves, and simply have placeholders where data can be subbed in, since they are going to be templates. However, they are completely agnostic about where that data comes from 
+* Your controllers are components that receive the incoming request, tell the correct models to retrieve data or to perform some business logic, and then they send the response back out after updating it. But they are completely separate from the models. They don't handle any business logic, just the receiving of information and updating the views
+* Your models are components that do the business logic and make database calls, and they are completely separate from views and controllers. They are interact with controllers by sending data to them, but they are completely agnostic about the controller. All they do is perform business logic and then hand that data off to whatever controller calls for it 
+* Let's use an example to think about this. Suppose you have a lorem ipsum generator, which creates random nonsense Latin text for designers to use to demonstrate their layouts. Your app could be broken down like this: 
+
+    1. `LoremIpsumGenerator` - a component that takes a number of paragraphs it should produce, and produces the text. It doesn't care how it gets that number, and it doesn't care where the data goes after it produces it. It's only role is to generate the placeholder text. This is a model, the 'M' in MVC.
+    2. A page that displays the text. It has a placeholder where the data is subbed in to be displayed by the user. It doesn't care where the data comes from, it just takes the data and displays it visually. This is a view, the 'V' in MVC.
+    3. `LoremIpsumController` - a component that receives the http request, which includes input from the user for how many paragraphs to generate. It parses that request, sends it to `LoremIpsumGenerator` and then gets back the data from the model, then updates the view before passing off the `response` object to the application router. It is the controller, the 'C' in MVC
+
+* Using the MVC pattern makes your codebase more easy to read by implementing a principle called the "separation of concerns" - each component of an app should do exactly one thing (or one set of closely related things) and not be involved in anything else
+* This makes you app modular, more scalable, and more easy to read by keeping things organized and separate 
+* There are many ways to implement the MVC pattern and you should do research and read about this topic for yourself. Personally, I like the modularity and simplicity of object-oriented programming. OOP makes implementing MVC easy in my opinion. This is how I do it: 
+
+1. Make a folder for controllers 
+2. Make a folder for models 
+3. Make a folder for views (you should already have this)
+    
+* Following the lorem ipsum example, make a file called `LoremIpsumGenerator.js` and make a new model class in it like this: 
+
+```js 
+module.exports = class LoremIpsumGenerator
+{
+    // add methods needed to make the lorem ipsum text
+    makeText(paragraphs) 
+    {
+        // make the text
+    }
+}
+```
+
+* Make a new controller class called `LoremIpsumController.js`: 
+
+```js 
+const loremIpsumGenerator = new (require(./path/to/model));
+
+module.exports = class LoremIpsumController
+{
+    render(request, response)
+    {
+        const numberOfParagraphs = request.query.paragraphs;
+        const loremIpsumText = loremIpsumGenerator.makeText(paragraphs);
+        response.render('loremIpsumView.pug', { loremIpsumText });
+    }
+}
+```
+
+* Make your view template in the `views` directory 
+* Require and instantiate your controller in your routes file and call the controller's `render` method in the route:
+
+```js 
+const loremIpsumController = new (require(/path/to/controller));
+
+router.get('/loremIpsum', (req, res) => loremIpsumController.render(req, res));
+```
+* As you can see, this keeps everything separate: the view is completely separate from the controller, which gets data and updates the view, and the model, which receives data and does the business logic. They interact with each other, but each one only handles it's own separate tasks. This will make your programs easier and smoother to make, cleaner, easier to read for yourself and others. You will no doubt also be required by a future employer to use some implementation of this design pattern 
