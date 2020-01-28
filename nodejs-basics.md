@@ -66,8 +66,8 @@ console.log(`${greeting} ${user}`);
 * commandline flags are a useful way to specify the role of commandline arguments
 
 ### `stdout` and `stdin`
-* stdout is a property of the global `process` object and represents  a stream where data can be entered into a program
-* stdout is also a property of `process` that represents data output from a the current process
+* stdin is a property of the global `process` object and represents  a stream where data can be entered into a program
+* stdout is also a property of `process` that represents data output from the current process
 * These streams have events that can be listened for, such as 'data' and 'exit'
 * See a small program that uses the standard output and standard input: 
 
@@ -90,7 +90,7 @@ const answers = [];
 ask();
 
 /* listener
-    the .on() method is now you listen for an event 
+    the .on() method is how you listen for an event 
     'data' is an event and it's when data gets passed to the program via 
     the commandline or something else
     data comes into the program in the form of a buffer, so it has to be 
@@ -277,13 +277,24 @@ process.on('exit', () => {
 
 ## Files and streams
 
+### Readable streams 
+* The file system comes with a way to create readable streams 
+    * the `fs.createReadStream(pathToFile, [encoding])`
+    * You can then read data from a file through a stream, and this is less memory-intensive because the stream reads data chunk by chunk rather than all at once 
+    * Streams raise the 'data' and 'end' events which are emitted when data comes through the steam, and when data is finished coming through the stream, respectively 
+    * (note: common encoding is "UTF-8" for standard text)
+
+### Writable file streams
+* You can create streams that allow you to write to something other than the standard output, such as a file 
+    * Use the `fs.createWriteStream(path/to/file, [encoding])`
+    * You can then use the `write()` method to write data to that stream 
+    * Readable and writable streams are meant to work together. Read data from one stream, write it to another 
+    * There are a lot of methods for writing to streams 
+        * E.g the `pipe(stream)` method allows you to "pipe" data from the standard input to a writable stream you created, such as a stream to a file 
+        * The `pipe()` method can be called on `process.stdin` or a writable stream you create
 
 
-
-### Getting help
-* [Node.js documentation](https://nodejs.org/en/docs/)
-
-### HTTP servers
+## HTTP servers
 * To create an http server, require the `http` module and use the `createServer` method:
 
 ```js
@@ -296,3 +307,6 @@ http.createServer((request, response) => {
 .listen(1337, '127.0.0.1'); // listen on port
 ```
 * In `.listen` the values above are default but not needed. You can listen on any port, on any ip. Leave out the ip argument if needed and it will use the ip of the device
+
+## Getting help
+* [Node.js documentation](https://nodejs.org/en/docs/)
