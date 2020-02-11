@@ -293,12 +293,52 @@ process.on('exit', () => {
         * E.g the `pipe(stream)` method allows you to "pipe" data from the standard input to a writable stream you created, such as a stream to a file 
         * The `pipe()` method can be called on `process.stdin` or a writable stream you create
 
+### Child processes
+* Node comes with a child process module that allows you to execute external processes in the Node environment 
+* This means that node can interact with other applications 
+* [`child_process` docs](https://nodejs.org/dist/latest-v13.x/docs/api/child_process.html#child_process_child_process)
+* [Article about `child_process`](https://medium.com/the-guild/getting-to-know-nodes-child-process-module-8ed63038f3fa)
+* E.g:
+
+```js 
+const childProcess = require('child_process');
+
+// this will open the web browser and open the page specified
+childProcess.exec('open http://www.linkedin.com/learning');
+```
+* The `child_process.exec()` method can be used to execute any node or external process
+* the `child_process.spawn()` method is used for asynchronous processes
+* For instance if you have a small node terminal program that runs asynchronously, to execute it as a child process you would use `spawn()`:
+
+```js 
+const childProcess = require('child_process');
+
+// first arg is command, second is an array containing the file
+const asyncApp = childProcess.spawn('node', ['asyncApp.js']);
+
+// now you can write a handler to deal with the standard output from the process
+asyncApp.stdout.on('data', data => {
+    // do something with data 
+});
+
+// display a message when the process closes
+asyncApp.on('close', () => {
+    console.log('asyncApp process exited');
+})
+```
+
+* You could also write data into the process:
+
+```js 
+asyncApp.stdin.write(/* data you want to input to the process */);
+```
 
 ## HTTP servers
 * To create an http server, require the `http` module and use the `createServer` method:
 
 ```js
 const http = require('http');
+
 
 http.createServer((request, response) => {
     response.writeHead(200, {'Content-Type': 'text/plain'}); // resp header
