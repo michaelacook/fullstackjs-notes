@@ -24,6 +24,8 @@ re-render whenever the state of the application changes
 `$ npx create-react-app my-app-name`
 
 * This will install React, webpack and other dependencies to give you a full development and build system
+* You can then run `$ npm start` to start up the development server 
+* In development, React must run through a local development server
 * The app will come with boilerplate in the `src` and `public` directories. You can delete the boilerplate in `src` but be careful not to delete `index.html` in `public`
 * When using Create React App all the JavaScript and CSS for your project lives in `src`. Webpack never touches your public folder, which holds `index.html` and any favicons the app uses
 * Next, run `$ touch index.js` to create your index file. This file will pull in all your components and render the the root level component of your app
