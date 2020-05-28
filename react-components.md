@@ -197,3 +197,156 @@ render() {
 ### Refs and the DOM
 * [Docs for refs](https://reactjs.org/docs/refs-and-the-dom.html)
 * [refs glossary entry](https://reactjs.org/docs/glossary.html#refs)
+* In React, elements and components are generally not modified directly. Rather, you pass them new props, and they re-render. But some times you need a reference to a component's instance or the underlying DOM node of a component. For this React provides **refs**
+* Refs are usually used for managing focus, text selection and triggering imperative animations
+* Refs can also be used instead of controlled components for forms, but this is not recommended unless you have a lot of form elements and they do not need real-time validation
+* To create a ref you use the method `React.createRef()` and assign the return value to a variable 
+* You can then pass that ref to the `ref` attribute on an element 
+* E.g: 
+
+```js
+class MyComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.myRef = React.createRef();
+  }
+  render() {
+    return <div ref={this.myRef} />;
+  }
+}
+```
+* The above example is from the React docs
+* You can then access the element's DOM node or instance with the syntax `refVariable.current` allowing you to get it's value or change it's styling
+* Use refs sparingly. React is intended to be declarative for the most part
+* Read the docs for a more in-depth discussion of refs
+
+### Validate props with PropTypes 
+* reading: 
+  - https://reactjs.org/docs/static-type-checking.html
+  - https://www.typescriptlang.org/
+  - https://flow.org/
+  - https://reactjs.org/docs/typechecking-with-proptypes.html
+  - https://reactjs.org/docs/typechecking-with-proptypes.html#proptypes
+  - https://www.npmjs.com/package/prop-types
+* PropTypes is a library that used to come with React, but was taken out to allow more developer choice
+* PropTypes is a great way to validate the data passed via props to your components without using TypeScript 
+* as an app gets bigger, it's a good practice to validate your props or "type check" in 
+    order to make sure your component is receiving the correct data types in props 
+* this helps avoid bugs and it also lets other developers who may be working on the 
+    same code base know exactly what type of data your component needs to receive 
+* three popular ways to type-check in React: 
+  1. PropTypes
+  2. TypeScript 
+  3. Flow
+* Using PropTypes allows you to catch bugs quickly because you will get console warnings when invalid data is being passed to a component 
+* PropTypes also acts as documentation for your components, telling other developers exactly what your component expects to receive
+* To set up PropTypes:
+  1. run `$ npm install prop-types --save`
+  2. `import PropTypes from 'prop-types;'
+  3. Add an object property to your component that sets prop values as keys and their validators as values to those keys
+* E.g: 
+
+```js
+import React from "react"
+import PropTypes, { arrayOf } from "prop-types"
+
+const Stats = ({ players }) => {
+  const totalPlayers = players.length,
+    totalPoints = players.reduce((sum, curr) => {
+      return sum + curr.score
+    }, 0)
+
+  return (
+    <table className="stats">
+      <tbody>
+        <tr>
+          <td>Players:</td>
+          <td>{totalPlayers}</td>
+        </tr>
+        <tr>
+          <td>Total Points:</td>
+          <td>{totalPoints}</td>
+        </tr>
+      </tbody>
+    </table>
+  )
+}
+
+// propTypes validators
+Stats.propTypes = {
+  players: arrayOf(
+    PropTypes.shape({
+      score: PropTypes.number,
+    })
+  ),
+}
+```
+
+### Static PropTypes and default props
+* When writing propType validators for class components you can specify your propTypes as a static property on your class
+* This puts the propTypes at the top of the file instead of the bottom and means your component doesn't require an instance to be validated
+* E.g: 
+
+```js 
+class Player extends PureComponent {
+  // chaining isRequired to a propType makes the prop required
+  static propTypes = {
+    hasHighest: PropTypes.bool,
+    changeScore: PropTypes.func,
+    removePlayer: PropTypes.func,
+    name: PropTypes.string.isRequired,
+    score: PropTypes.number,
+    id: PropTypes.number,
+    index: PropTypes.number,
+  }
+
+  render() {
+    // this is the best way to destructure props inside a class component
+    const {
+      hasHighest,
+      removePlayer,
+      changeScore,
+      name,
+      index,
+      score,
+      id,
+    } = this.props
+    return (
+      <div className="player">
+        <span className="player-name">
+          <button className="remove-player" onClick={() => removePlayer(id)}>
+            ✖
+          </button>
+          <Icon highScore={hasHighest ? true : null} />
+          {name}
+        </span>
+
+        <Counter index={index} score={score} changeScore={changeScore} />
+      </div>
+    )
+  }
+}
+```
+* You can make a prop required by chaining `.isRequired` to the propType validator
+* You can also add default props for a component that are automatically passed to it when the application does not pass any props 
+* E.g: 
+
+```js
+const Icon = ({ highScore }) => {
+  return (
+    ...
+  )
+}
+
+Icon.propTypes = {
+  isHighScore: PropTypes.bool,
+}
+
+// default props
+Icon.defaultProps = {
+  isHighScore: null,
+}
+```
+
+## Going further 
+* All the notes in this note set are basic. These notes are only meant to be a starting point for understanding aspects of component design. To understand implementations of these features and patterns in greater detail you should read the React documentation.
