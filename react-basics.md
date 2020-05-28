@@ -1,5 +1,6 @@
 # React.js Basics 
-* A few good articles to read: 
+* A few good articles to read:
+    * [Declarative vs. Imperative Programming](https://codeburst.io/declarative-vs-imperative-programming-a8a7c93d9ad2#:~:text=Declarative%20programming%20is%20a%20programming,that%20change%20a%20program's%20state.&text=Declarative%20Programming%20is%20like%20asking%20your%20friend%20to%20draw%20a%20landscape.)
     * [Thinking in React](https://reactjs.org/docs/thinking-in-react.html)
     * [The Public Folder `in create-react-app`](https://medium.com/@jenniferdobak/the-public-folder-and-favicons-in-create-react-app-8dc2cc1d492b)
     * https://medium.com/@bretdoucette/understanding-this-setstate-name-value-a5ef7b4ea2b4
