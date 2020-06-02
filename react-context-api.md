@@ -8,7 +8,7 @@
 ## Setting up a Provider and Consumer
 * To create context in a React application, you first create a Provider and Consumer
 * The Provider provides the data you want to make directly available via context, and the Consumer wraps components that consume or "subscribe" to data provided by the context Provider
-* To create the Provider and Consumer, you use the `ReactContext()` method
+* To create the Provider and Consumer, you use the `React.createContext()` method
 * Create a separate file and import React and initialize your context variable:
 
 ```js 
