@@ -146,7 +146,7 @@ export class Provider extends Component {
   }  
 }
 
-export const Consumer = ScoreboardContext.Consumer;
+export const Consumer = ApplicationContext.Consumer;
 ```
 
 * Then you can simplify your old root level component to be a simple stateless functional component: 
