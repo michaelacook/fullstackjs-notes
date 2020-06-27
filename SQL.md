@@ -215,3 +215,28 @@
     AND book_id = 24601;
     ```
 * `WHERE` conditions work the exact same way in `UPDATE` queries as they do in `SELECT` queries
+
+
+### Deleting Records
+* To delete all data from a table, use: 
+
+    ```sql
+    DELETE FROM <table>;
+    ```
+* To delete a specific row, use a `WHERE` clause
+* Deleting is permanent, so exercise caution
+
+
+### Transactions
+* Transactions allow you to switch off autocommit (meaning the statements you write are automatically saved to disk) and then "commit" the statements once you decide. This would normally be done when writing batch operations (like seeding a database for instance)
+* To use a transaction write: 
+
+    ```sql 
+    BEGIN TRANSACTION;
+    ```
+* To save all the results of statements written after the start of the transaction write: 
+
+    ```sql 
+    COMMIT;
+    ```
+* Use the `ROLLBACK` keyword to undo uncommitted queries in a transaction
