@@ -240,3 +240,36 @@
     COMMIT;
     ```
 * Use the `ROLLBACK` keyword to undo uncommitted queries in a transaction
+
+
+## Reporting with SQL
+* This set of notes summarizes the Reporting with SQL course
+* This material addresses common ways to manage data in more human-readable and useful ways
+
+### Ordering, Limiting and Paging 
+* You can order the results of a query with the `ORDER BY` keyword 
+* E.g: 
+
+    ```sql 
+    SELECT * FROM books ORDER BY title
+    ```
+* This will order the results by title ascending alphebetical order by default 
+* You can specify whether you want the results to be in ascending or descending order by adding either `ASC` or `DESC`
+
+* You can limit the number of results of a query by using the `LIMIT` keyword:
+
+    ```sql 
+    SELECT * FROM books ORDER BY title DESC LIMIT 10;
+    ```
+* The above query will return the first 10 books ordered by title in descending order
+* To page through results, you can add the `OFFSET` keyword in combination with `LIMIT` to create pagination 
+* `OFFSET` specifies how many results to skip. An offset of 0 skips 0 rows, an offset of 1 skips 1 row, and so on 
+* E.g: 
+
+    ```sql 
+    SELECT * FROM books ORDER BY title DESC LIMIT 10 offset 10;
+    ```
+* The above query will show the second page of 10 rows as it will show rows from 11 to 20
+
+
+### Working with Text
