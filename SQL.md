@@ -273,3 +273,136 @@
 
 
 ### Working with Text
+* This section covers methods of manipulating text including functions 
+
+* To concatenate text from queries, use the `||` operator: 
+
+    ```sql 
+    SELECT first_name || last_name AS "Full Name" FROM customers;
+    ``` 
+* This will output the text from both columns joined together
+* To put a space between the first and last name, this is what you would do: 
+
+    ```sql 
+    SELECT first_name || " " || last_name AS "Full Name" FROM customers;
+    ```
+
+#### A note about single and double quotes
+* There is a difference between single and double quotes in SQL 
+* You should use single quotes for string literals, and use double quotes for identifiers like column aliases 
+* E.g: 
+
+    ```sql 
+    SELECT maximum_weight || 'lbs' AS "Max Weight" FROM ELEVATOR_DATA;
+    ```
+* Some database management systems don't enforce this rule though, while some do. It's important to consult documentation
+
+* To get the length of a string, use the `LENGTH()` function: 
+
+    ```sql 
+    SELECT username, LENGTH(username) AS LENGTH FROM customers;
+    ```
+* The above query will return rows showing usernames and the number of characters in each username
+* To uppercase a string, use the `UPPER()`; to lowercase a string, use `LOWER()`
+* E.g: 
+
+    ```sql 
+    SELECT * FROM customers WHERE LOWER(email) = "email@email.com";
+    ```
+* This query would be useful when searching for an email that may contain capital letters
+* Another e.g: 
+
+    ```sql 
+    SELECT UPPER(zip) FROM addresses WHERE country = "Canada";
+    ```
+* To get a substring from a string, use the `SUBSTR(<value or column>, <start>, <length>)` function. E.g: 
+
+    ```sql
+    SELECT SUBSTR(description, 1, 30) || "..." AS short_description FROM products;
+    ```
+
+* To replace text, use the `REPLACE(<value or column>, <target>, <replacement>)` function. E.g:
+
+    ```sql
+    SELECT * FROM addresses WHERE REPLACE(state, "California", "CA") = "CA";
+    ```
+
+### Aggregate and Numeric Functions
+* `COUNT(<value or column>)` is used to count the number of rows for some condition or simply without a condition to identify the number of rows in a table
+* Counts all non-null values unless you use an asterisk
+* E.g:
+
+    ```sql
+    SELECT COUNT(DISTINCT category) FROM products;
+    ```
+
+* This query will return the number of distinct category names 
+* Use the `GROUP BY <column>` keyword to generate a report where rows are grouped together by the column you specify
+* E.g: 
+
+    ```sql
+    SELECT category, COUNT(name) FROM products GROUP BY category;
+    ```
+
+* `GROUP BY` is different from the `DISTINCT` keyword. `DISTINCT` returns only distinct or unique values, but `GROUP BY` returns a report in which rows are simply grouped together
+* To get the sum of all columns with or without a filter condition, use the `SUM(<column>)` function. E.g: 
+
+    ```sql
+    SELECT SUM(cost) FROM orders;
+    ```
+
+* To see the sum total amount spent by each customer, for instance, you could use the `GROUP BY` keyword and group results by the user id. E.g:
+
+    ```sql
+    SELECT SUM(cost), user_id FROM orders GROUP BY user_id;
+    ```
+
+* The above query will return a report that shows the sum of the cost for all orders for each user id
+* If you want to specify conditions when using the `GROUP BY` keyword, you cannot use a `WHERE` clause
+* To specify conditions when using `GROUP BY`, use the `HAVING` keyword and then specify your condition. The `HAVING` clause must appear in the query after the `GROUP BY` clause. E.g: 
+
+    ```sql
+    SELECT SUM(cost) AS total_spend, user_id FROM orders 
+                        GROUP BY user_id 
+                        HAVING total_spend > 250
+                        ORDER BY total_spend DESC;
+    ```
+* `HAVING` must always appear after `GROUP BY` and before `ORDER BY`    
+* Since `total_spend` is an aggregation, specifying conditions based on it requires using `HAVING` and not `WHERE`
+* `HAVING` instead of `WHERE` must be used when you are grouping by columns and/or using aggregate functions
+* `HAVING` filters groups but `WHERE` filters individual records
+* The only time `WHERE` can be used when you are using aggregate functions is when you are not filtering based on an aggregated value. E.g: 
+
+    ```sql
+    SELECT AVG(cost) as average, 
+           MAX(cost) as maximum, 
+           MIN(cost) as minimum, 
+           user_id
+    FROM orders 
+    WHERE user_id > 5
+    GROUP BY user_id
+    HAVING average > 30;
+    ```
+
+* The above complex query is valid and will work. The query filters individual rows based on user_id, and filters aggregated values based on the aggregate average
+
+* The `AVG(<column>)` aggregate function returns the average for the column passed
+* The `MAX(<numeric column>)` and `MIN(<numeric column>)` aggregate functions are used to find the maximum and minimum values for a particular column. These work just like `AVG`
+* E.g: 
+
+    ```sql
+    SELECT AVG(cost) as average, 
+           MAX(cost) as maximum, 
+           MIN(cost) as minimum, 
+           user_id
+    FROM orders 
+    GROUP BY user_id;
+    ```
+
+* The above query will return a report showing the average, largest and smallest order cost for each user id
+
+* The `ROUND(<value>, <decimal places>)` function will round floating point numbers to the number of decimal places you specify. This is useful for doing math in queries, since often the computer will return unwieldy floating point numbers by default. E.g:
+
+    ```sql
+    SELECT ROUND(price * 1.14, 2) as "Price in Ontario" FROM products;
+    ```
