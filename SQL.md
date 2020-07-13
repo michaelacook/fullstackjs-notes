@@ -406,3 +406,40 @@
     ```sql
     SELECT ROUND(price * 1.14, 2) as "Price in Ontario" FROM products;
     ```
+
+
+### Dates and Time Functions
+* The specifics of date and time functions differs between different datebases. It is always necessary to check documentation. Examples here are for SQLite
+* To run a query based on the current date you can use the `DATE()` function and pass it the string "now"
+* E.g: 
+
+    ```sql
+    SELECT * FROM orders WHERE ordered_on = DATE("now");
+    ```
+
+* "now" passed to the `DATE()` function is called a time string. A date string can be "now" or it could be a date, like "2020-07-13"
+* You can also pass what are callled **modifiers** to the `DATE()` function, such as "-21 days" 
+* E.g: 
+
+    ```sql 
+    SELECT COUNT(*) FROM orders WHERE ordered_on BETWEEN DATE("now") AND DATE("now", "-31 days");
+    ```
+
+* The example query would return all orders placed between today and 31 days ago
+* You can add as many modifier arguments to the `DATE()` function as you want
+
+#### Date Datatypes 
+* Date type `YYYY-MM-DD`
+* Time type `hour (24 hr):minute:second`
+* Datetime `YYYY-MM-DD hour:minute:second`
+
+* SQL databases provide functions for formatting these datatypes in more human-readable ways
+* To trim the time off a `datetime` type, pass the datetime to the `DATE()` function
+* If you want to trim the date off a `datetime` and only show the time, pass the `datetime` to the `TIME()` function
+* The `STRFTIME(<format string>, <date/time/datetime string>, <modifer>)` function can be used to format dates and times in even more human readable ways by allowing you to specify a way you want to the string to appear 
+* You can also add as many optional modifiers as you want just like you can with `DATE()`
+* E.g: 
+
+    ```sql
+    STRFTIME("%d/%m/%Y", "2020-07-13", "+ 1 day");
+    ```
