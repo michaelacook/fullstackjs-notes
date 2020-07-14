@@ -443,3 +443,34 @@
     ```sql
     STRFTIME("%d/%m/%Y", "2020-07-13", "+ 1 day");
     ```
+
+
+## Querying Relational Databases
+* This set of notes covers more intermediate and theoretical topics related to SQL databases
+
+### Database Normalization
+* In relational databases, tables of data are linked together, or related, by shared attributes - relationships between tables
+* the schema describing the structure of relationships between tables has a major impact on how well the database scales as it grows and how queries on that database will perform
+* relational databases organize data and give data context and meaning to the words and numbers in those tables
+* the process of designing a schema that serves as a model for how data should be organized and relate to each other is called **normalization**
+* reading: 
+    * [Database Normalization (Explained in Simple English)](http://www.essentialsql.com/get-ready-to-learn-sql-database-normalization-explained-in-simple-english/)
+    * [Normalization of Databases](https://www.studytonight.com/dbms/database-normalization.php)
+* Normalization, or organizing data into relational tables, makes relational databases so performant because it significantly reduces disk space by making data more efficient
+* Normalization also allows efficient updates to data without **update anomalies** which is where data gets missed when trying to update 
+* When data are broken into separate relational tables with IDs, data only need to be changed once rather than hundreds, thousands or even millions of times 
+
+#### Set Theory 
+* [Set Theory resource](https://www.mathsisfun.com/sets/)
+* Data in databases can be conceptualized in terms of set theory
+* **set** - **Grouping of similar things together** 
+* in set theory, sets are represented with {} curly braces
+    * the **union** of two sets is the set resulting from adding all elements in both sets together 
+    * the **intersection** of two sets is the set resulting from putting the common elements from both sets together
+    * the **except** of two sets is the set resulting from putting all elements that only belong to one set but not both together 
+    * These are common set operations 
+* queries in relational databases are actually set operations
+* Good database normalization constructs schemas in ways that make set operations on the data easy and efficient
+* data can also be represented in Venn Diagrams, which are ways to visually represent sets and set operations
+
+### Database Keys
