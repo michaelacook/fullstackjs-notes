@@ -474,3 +474,58 @@
 * data can also be represented in Venn Diagrams, which are ways to visually represent sets and set operations
 
 ### Database Keys
+* Database keys are columns that act as common attributes between different tables, linking them together
+* Keys can also play other roles beyond acting as the links between tables 
+* **Unique keys**
+    * They must be unique or you will get an error
+    * They can be null 
+    * There can be multiple unique keys per table 
+    * Unique keys can be updated as long as they remain unique
+* **Primary keys** 
+    * Guarantees data is unique within a column, similar to a unique key
+    * Primary keys can never be null
+    * A table can only have a single primary key
+    * Primary keys cannot be updated
+    * Primary keys do not have to be numeric, they but usually are and serve as an id column for relating data in one table to another
+    * Primary keys don't usually contain any business-relevant data, they simply relate data in one table to others
+    * Using numeric values is simple and helps keep disk usage low for faster database performance
+    * Primary keys are often set to auto increment so that the programmer does not have to manually add it in queries
+* **Foreign keys** 
+    * Foreign keys are columns that relate back to the primary key in another table 
+    * For example, consider a Users table and a Posts table. The Users table has a primary key called userID. The Posts table also has a column called userID, but it is a foreign key. It acts as the link between Users and Posts. Each Posts table row will have a column that contains the userID primary key from Users
+    * When designing a schema during normalization, primary and foreign keys need to be matched correctly. The database does not know by itself which data should be related. These decisions have to be made based on what makes sense from a business point of view
+    * **Foreign key contraint**: databases enforce the relationship between primary and foreign keys by only allowing data to be added to a table with a foreign key if that same data also exists in a table containing the matching primary key
+    * Creating a foreign key to match a primary key in another table creates the foreign key constraint
+    * **Referential integrity**: Foreign key values must also exist as a primary key value in the reference table. Referential integrity means that the data relationships between tables is valid
+    * Referential integrity is one of the most important aspects of good relational database schema design
+    * To achieve this, a foreign key must be explicitly indicated during schema design otherwise the database will not know 
+
+### Table Relationships
+* Three types of relationships between tables: one-to-one, one-to-many, and many-to-many
+* These are described by how many rows can be related to each other on either side of the relationship
+* **One to Many** 
+    * Most common
+    * One row in a table is related (through a foreign key constraint) to many rows in another table, but not vice-versa
+    * E.g: In a database for a blog site, there is a Users table and a Posts table. Users has a PK USER_ID and Posts has a foreign key USER_ID. Each user in Users can have many references in the Posts table, but each Posts row can only refer back to a single row in the Users table. In simple terms, each user can have many posts, but each post can only have one user
+* **Many to Many**
+    * Given two tables, each row in each table could potentially relate to many rows in the opposite table 
+    * Many to many relationships in a database are usually a mirror of the real life relationship between the objects the two tables represent
+    * Many to Many relationships between data in two tables require a third table called a **junction table**
+    * In the junction table, both primary keys from the tables with the many-to-many tables are made foreign keys
+    * Therefore, many-to-many relationships never actually exist in a database. They are instead handled by two separate tables each having a one-to-many relationship with the junction table
+    * This is because it is impossible to create a real many-to-many relationship between two tables since it would force you to duplicate the PK in the table you added the foreign key to, and the database will not allow you to do this
+    * E.g: A table Orders and a table Parts for an auto mechanic would have a many-to-many relationship: each order could have multiple parts, and each part could be on multiple orders. To represent the relationship you need a junction table called Order_Part that has the primary keys of both Orders and Parts as foreign keys. Order_Part could then contain as many rows as needed containing partIDs and orderIDs 
+    * Another example of a many-to-many relationship would be students and courses. A student can be in many courses at once, and a course can have many students in it. So aside from a Students table and a Courses table, we would need a Student_Course table containing the foreign keys studentID and courseID
+* **One to One**
+    * Least common type of relationship
+    * A row in one table can only relate to only one row in another table and vice versa
+    * In most cases, two tables with a one-to-one relationship should actually just be a single table 
+    * However, separating frequently accessed columns from infrequently accessed columns could create a boost in performance by eliminating the overhead of the infrequently accessed columns
+    * In concrete terms, if you had a proprietary database design that could not be modified, but you wanted to add more columns for a table, you could add an extension table that uses the PK of the first table as the FK, and simply adds more columns that you would have otherwise added to the first table if you could. In this case each PK in the first table refers only to one record in the extension table, and vice versa. They really could just be one table
+    * Every database table has a one-to-one relationship with it's own data: each row has a relationship with only one PK, and each PK has only a single row--this is trivial but helps to understand the relationship
+* Database designers use diagrams called Entity Relationship Diagrams to model data relationships during the design process
+* Tables are referred to as entities 
+* "Crow's feet" symbols are used for the many side of a relationship, and single lines are used for the one side of a relationship
+* [Chen Notation](https://www.vertabelo.com/blog/chen-erd-notation/)
+* [UML Class Diagrams with Cardinality](https://en.wikipedia.org/wiki/Cardinality_(data_modeling))
+* [Design Elements](https://www.conceptdraw.com/solution-park/resource/images/solutions/entity-relationship-diagram-(erd)/Design_Elements(Crows-Foot-ERD).png)
