@@ -529,3 +529,53 @@
 * [Chen Notation](https://www.vertabelo.com/blog/chen-erd-notation/)
 * [UML Class Diagrams with Cardinality](https://en.wikipedia.org/wiki/Cardinality_(data_modeling))
 * [Design Elements](https://www.conceptdraw.com/solution-park/resource/images/solutions/entity-relationship-diagram-(erd)/Design_Elements(Crows-Foot-ERD).png)
+
+
+### Joining Table Data
+* Joins tells the database to merge data from two or more tables together in a query, leaving each table intact
+* The most common joins are inner joins and outer joins
+
+#### Inner Joins
+* most common type of join 
+* inner joins match records together **where values are equal on both sides of the join statement**
+* E.g: 
+
+    ```sql
+    SELECT Orders.OrderID, Customers.CustomerName 
+           FROM ORDERS 
+           INNER JOIN Customers ON
+           Orders.CustomerID = Customers.CustomerID;
+    ```
+
+    ```sql
+    SELECT * FROM make 
+           INNER JOIN model ON make.MakeId = model.MakeId;
+    ```
+
+* The query will only select rows from both tables that have a match between the primary and foreign keys
+* It is often necessary and usually best to specify the table name and then the column name being selected with dot syntax, especially when referencing primary and foreign keys
+* It is also possible to alias table names just as you can alias column names. E.g: 
+
+    ```sql 
+    SELECT mk.MakeName, md.ModelName FROM make AS mk
+           INNER JOIN model AS md ON mk.MakeId = md.MakeId;
+    ```
+
+* You can also add `WHERE` clauses: 
+
+    ```sql 
+    SELECT mk.MakeName, md.ModelName FROM make AS mk
+           INNER JOIN model AS md ON mk.MakeId = md.MakeId
+           WHERE mk.MakeName = "Chevy";
+    ```
+
+* (note: you can still specify `WHERE` conditions and use `ORDER BY` and other keywords the same as you would in a non-complex query. You specify these in the same order, after specifying your join. The join clause always follows the `FROM` keyword in a query.)
+
+#### Outer Joins
+* not as common as inner joins, but come in handy for certain complex queries
+* Outer joins return data from two or more tables whether or not the data match
+* Three types: right outer join, left outer join, and full outer join
+* Left outer joins return all data specified on the left, and only matching data from the table on the right
+* Right outer joins return all data from the table on the right, and only matching data from the table on the left. Full outer joins return all data whether or not they match
+* Some databases do not support all types of joins. SQLite for instance only supports the left outer join
+* Uses the same syntax as inner joins
