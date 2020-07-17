@@ -579,3 +579,55 @@
 * Right outer joins return all data from the table on the right, and only matching data from the table on the left. Full outer joins return all data whether or not they match
 * Some databases do not support all types of joins. SQLite for instance only supports the left outer join
 * Uses the same syntax as inner joins
+
+
+### Set Operations
+* [Learn to use Union, Intersect, and Except Clauses](https://www.essentialsql.com/learn-to-use-union-intersect-and-except-clauses/)
+* Set operations allow you to perform different tasks on separate tables
+* Use to combine two or more data sets in various ways or limit one data set with another
+* Four set operations: UNION, UNION ALL, INTERSECT, EXCEPT
+* **UNION** 
+    * [What Is the Difference Between a Join and a UNION?](https://www.essentialsql.com/what-is-the-difference-between-a-join-and-a-union/)
+    * Different from an INNER JOIN
+    * Union operations do not depend on a PK-FK relationship at all
+    * While joins put columns together, Unions put rows together--stacks data vertically, as opposed to horizontally with joins  
+    * The number of columns and their data types must match in order to do a union
+    * E.g consider a database for a car dealership. There is a table DomesticMakes and a table ForeignMakes. You could get a report of all makes with the following query:
+
+        ```sql
+        SELECT name FROM DomesticMakes
+        UNION
+        SELECT name FROM ForeignMakes;
+        ```
+
+    * This will stack all make names vertically, assuming they have the same data type
+    * WHERE clauses, other conditions and keywords are used the same as they normally are. You do not put them after the UNION keyword. The keyword just goes between two otherwise separate queries
+* **UNION ALL** 
+    * Very similar to UNION, except that it returns all data from both sides of the union operation, even if there are duplicates, whereas a regular union returns distinct results
+* **INTERSECT** 
+    * Returns only rows that exist in both sides of the set operation
+    * Returns vertical rows just like the other set operations
+    * Like other set operations, an intersect operation includes two separate queries with the keyword INTERSECT between them
+    * E.g:
+
+        ```sql
+        SELECT name FROM DomesticMakes 
+            INTERSECT
+        SELECT name FROM ForeignMakes
+        ORDER BY name DESC;
+        ```
+    * If you include PKs or any other column in your query that is likely to introduce non-identical data, you will probably get no results because an INTERSECT will ***only*** work if the data queried match identically 
+* **EXCEPT** 
+    * Handy to know
+    * Opposite of INTERSECT
+    * Like other set operations, queries must have the same number of columns and data types
+    * Uses the same format as other set operations
+    * Returns all records from a query **except** those that are a match with data in the second query. In other words, it returns only the data that are not in both tables
+    * E.g: 
+
+        ```sql
+        SELECT MakeName FROM ForeignMake
+        EXCEPT 
+        SELECT MakeName FROM Make;
+        ```
+    * Given two tables Make and ForeignMake that have some overlapping data, the above query will return makes that are foreign only, and will leave out, or **except** data that are in both tables
