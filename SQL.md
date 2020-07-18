@@ -631,3 +631,44 @@
         SELECT MakeName FROM Make;
         ```
     * Given two tables Make and ForeignMake that have some overlapping data, the above query will return makes that are foreign only, and will leave out, or **except** data that are in both tables
+
+### Subqueries
+* A subquery is a query used in conjunction with another query, usually for the purposes of defining or narrowing the results of the data returned by the main query
+* Reasons for using a subquery:
+    1. Criteria for a WHERE clause is not specifically known
+    2. You need a temporary dataset to join with other tables in your database
+* Subqueries can be used when you want to select a data column in a set or range of data using the IN keyword:
+
+    ```sql
+    SELECT * FROM Sale WHERE CarID IN (
+        SELECT CarID FROM Car WHERE ModelYear = 2015;
+    );
+    ```
+
+* This is useful if you don't exactly know which CarIDs you really need, so you perform a subquery to get them, and use the results of that subquery for the IN clause in the parent query
+* You can only select one column in your subquery
+
+#### Derived tables
+* Derived tables are useful when the data we want is not stored in the format that we want
+* You can use a subquery to create a temporary or "derived" table to join to other data for your specific purposes
+* This can come in useful when doing a lot of aggregation in your queries
+* E.g:
+
+    ```sql
+    SELECT * FROM Sale AS s 
+        INNER JOIN (
+            SELECT CarID FROM Car WHERE ModelYear = 2015 AS t;
+        )
+        ON s.CarID = t.CarID;
+    ```
+* You must alias derived tables so you have a reference to it in the JOIN criteria. Derived tables need to be joined to data from a parent query
+* Aliasing the SELECT statement in the subquery creates a temporary table (notice it has been aliased to 't') and then we join that temporary table to the columns returned by the parent query
+* You can add as many columns as you want to the temporary table 
+
+    ```sql
+     SELECT * FROM Sale AS s 
+        INNER JOIN (
+            SELECT CarID, ModelYear, Make FROM Car WHERE ModelYear = 2015;
+        ) AS t
+        ON s.CarID = t.CarID;
+    ```
