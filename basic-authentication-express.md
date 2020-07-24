@@ -13,6 +13,12 @@
     ```
 
 * The header fieldname is "Authorization" followed by a colon and then the value after
+* The string of random letters and numbers is a base64 token generated out of the username and password in the following format: `username:password`
+* To convert the username and password to a token use the `btoa` function: 
+
+    ```js
+    const authToken = btoa(`${username}:${password}`) 
+    ```
 * The [`basic-auth`](https://www.npmjs.com/package/basic-auth) package is good for parsing the Authorization header
 
 
