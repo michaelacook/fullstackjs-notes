@@ -97,3 +97,6 @@ nothing added to commit but untracked files present (use "git add" to track)
 - You can view differences between staged files and new changes with `git diff`
 - The basic workflow of a project involves changing the working directory, staging changes, and then committing those changes as a new version of the project
 - [Git cheat sheet](https://education.github.com/git-cheat-sheet-education.pdf)
+
+## Bonus 
+- The VS Code docs have lots of great information! Check out this short video on git integrations with VS Code that will make using git easier. [Git version control in VS Code](https://code.visualstudio.com/docs/introvideos/versioncontrol)
