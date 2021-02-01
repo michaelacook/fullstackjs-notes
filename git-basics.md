@@ -96,3 +96,4 @@ nothing added to commit but untracked files present (use "git add" to track)
 - To view the current status of the working directory and staging area run `git status`
 - You can view differences between staged files and new changes with `git diff`
 - The basic workflow of a project involves changing the working directory, staging changes, and then committing those changes as a new version of the project
+- [Git cheat sheet](https://education.github.com/git-cheat-sheet-education.pdf)
