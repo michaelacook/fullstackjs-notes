@@ -87,7 +87,7 @@ nothing added to commit but untracked files present (use "git add" to track)
 - Viewing previous commits saved to your git repository is useful in a number of situations
 - When you run the command, each commit will have a unique SHA, which is a 40 character identifier, as well as the author, date, and commit message
 
-## Recap 
+## Recap of git workflow
 - git is the industry standard software for keeping track of source code versions and it is used by a huge number of software development teams across the IT sector 
 - Initialize a git repository in your project with `git init`
 - As you make changes to the files in your working directory, you stage them for commit with `git add <file>` or `git add .`
@@ -100,3 +100,18 @@ nothing added to commit but untracked files present (use "git add" to track)
 
 ## Bonus 
 - The VS Code docs have lots of great information! Check out this short video on git integrations with VS Code that will make using git easier. [Git version control in VS Code](https://code.visualstudio.com/docs/introvideos/versioncontrol)
+
+## Backtracking 
+- When working on a project, there will be times when you want to revert to a previous version of your project 
+- The current commit is referred to as HEAD
+- HEAD is usually (but not always) the last commit made
+- You can view HEAD with the command `git show HEAD` - this command displays everything `git log` displays plus all the file changes that were commited
+- To discard changes since the last commit and revert back to HEAD, run `git checkout HEAD [filename]`
+  - You can use the shortcut `git checkout -- [filename]` to do the same thing
+- As mentioned previously, to unstage a file before committing, you can run the command `git reset HEAD [filename]`
+- This does not discard file changes, just removes them from the staging area
+- To revert back to any previous commit you choose, run `git reset [commit SHA]` and use the first 7 characters of the SHA 
+- To find the SHA, you just need to run `git log` to view a list of previous commits
+- This sets HEAD as the selected commit
+- This will erase all commits that came after the commit you are reverting to
+- If there are changes to the working tree that are uncommitted, then even though you revert back to a previous commit, your changes to the working tree will still be there. You therefore need to run `git checkout HEAD [file names]` to discard these changes and revert back to HEAD
