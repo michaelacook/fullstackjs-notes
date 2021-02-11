@@ -8,3 +8,4 @@
 - [Understanding Classes in JavaScript](https://www.taniarascia.com/understanding-classes-in-javascript/)
 - [Master the JavaScript Interview: What is a Closure?](https://medium.com/javascript-scene/master-the-javascript-interview-what-is-a-closure-b2f0d2152b36)
   - This is the first article in a series of articles on advanced JavaScript concepts to know for mid to senior-level interviews
+- [What are CJS, AMD, UMD and ESM in JavaScript?](https://dev.to/iggredible/what-the-heck-are-cjs-amd-umd-and-esm-ikm)
