@@ -12,3 +12,4 @@
 - [learnyounode](https://github.com/workshopper/learnyounode)
   - This is not an article, but an interactive tutorial application that you can run in the terminal to learn node.js. It's neat!
 - [Test-driven development - Wikipedia article](https://en.wikipedia.org/wiki/Test-driven_development)
+- [Introduction to Test Driven Development (TDD) - Hackernoon article](https://hackernoon.com/introduction-to-test-driven-development-tdd-61a13bc92d92)
