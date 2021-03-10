@@ -59,3 +59,89 @@ describe('Math', () => {
   - call like this: `assert.ok(1 + 2 === 3)`
   - if the expression passed to `assert.ok` evaluates to boolean `false`, an `AssertionError` is thrown
   - this tells mocha the test failed and mocha will log an error message to the console
+  - A good test has at least three parts: the setup, exercise, and verification
+    - Setup: create objects, variables and set conditions the test depends on. This is good for readability and expressiveness 
+  - Exercise: execute the functionality you are testing
+  - Verify: check your expectations against the result of the exercise phase. Use `assert` here
+  - E.g: 
+
+```js 
+// 3 phase approach
+describe('.pop', () => {
+  it('returns the last element in the array [3phase]', () => {
+    // Setup
+    const knightString = 'knight';
+    const jediPath = ['padawan', knightString];
+
+    // Exercise
+    const popped = jediPath.pop();
+
+    // Verify
+    assert.ok(popped === knightString);
+  })
+})
+```
+
+- Some tests require a fourth step, which is the teardown
+  - some tests make changes to their environment that will affect other tests, and therefore need to be reversed at the end. For instance, manipulating files and directories, file permissions, database records, etc 
+  - The teardown makes the test isolated 
+  - E.g: 
+
+```js 
+const assert = require('assert');
+const fs = require('fs')
+
+describe('appendFileSync', () => {
+  const path = './message.txt'
+  
+  it('writes a string to text file at given path name', () => {
+
+    // Setup
+    const str = 'Hello Node.js'
+    
+    // Exercise: write to file
+    fs.appendFileSync(path, str)
+
+    // Verify: compare file contents to string
+    const contents = fs.readileSync(path)
+    assert.ok(contents.toString() === str)
+
+    // Teardown: delete path
+    fs.unlinkSync(path);
+
+  })
+})
+```
+
+- The above test creates a new file with the text "Hello Node.js", but running the test twice will produce a fail because the test will append the string to the file again, changing it's contents. So at the end of the test, the file is deleted
+- This is not always reliable though. An error could occur in the test before the teardown is reached. Mocha provides a number of hooks, one of which allows you to run a teardown after each `it` execution. E.g: 
+
+```js
+const assert = require('assert');
+const fs = require('fs')
+
+describe('appendFileSync', () => {
+  const path = './message.txt'
+
+  afterEach(() => {
+    // Teardown: delete path
+    fs.unlinkSync(path);
+  })
+  
+  it('writes a string to text file at given path name', () => {
+
+    // Setup
+    const str = 'Hello Node.js'
+    
+    // Exercise: write to file
+    fs.appendFileSync(path, str)
+
+    // Verify: compare file contents to string
+    const contents = fs.readileSync(path)
+    assert.ok(contents.toString() === str)
+  })
+})
+
+```
+
+- Using the `afterEach` hook ensures that even if some error occurs, the teardown will still be executed
