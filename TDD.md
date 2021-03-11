@@ -145,3 +145,74 @@ describe('appendFileSync', () => {
 ```
 
 - Using the `afterEach` hook ensures that even if some error occurs, the teardown will still be executed
+
+### `assert`
+- Using `assert.ok` is fine for many tests
+- `assert` has other methods you can use though that will make tests more expressive and therefore document your implementation code better
+- Use `assert.equal` to test equality
+- To do a strict equality check, use `assert.strictEqual` since the former uses loose equality `==` and the latter uses strict equality `===`
+- Use `assert.deepEqual` to check if two objects are the same. the other two equality tests will both throw an error because two objects, even if they have all the same keys and values, are not generally considered to be the same (even though they are for all intents and purposes)
+  - `assert.deepEqual` will use loose equality to test all keys and values in both objects
+  - this also works for arrays, since arrays are actually just objects with numbered indices as keys  
+- The `assert` node module contains more methods as well: [docs](https://nodejs.org/api/assert.html)
+
+### (silly) Example of a test suite 
+
+-`index.js`: 
+
+```js 
+// Define a rooster
+Rooster = {}
+
+// Return a morning rooster call
+Rooster.announceDawn = () => {
+  return 'moo!'
+}
+
+// Return hour as string
+// Throws Error if hour is not between 0 and 23 inclusive
+Rooster.timeAtDawn = (hour) => {
+  if (hour < 0 || hour > 23) {
+    throw new RangeError;
+  } else {
+    return hour.toString();
+  }
+}
+
+module.exports = Rooster;
+```
+
+- `index.test.js`: 
+
+```js 
+const assert = require("assert")
+const Rooster = require("../index.js")
+
+describe("Rooster", () => {
+  describe(".announceDawn", () => {
+    it("returns a rooster call", () => {
+      const expected = "cock-a-doodle-doo!"
+      const actual = Rooster.announceDawn()
+      assert.equal(actual, expected)
+    })
+  })
+
+  describe(".timeAtDawn", () => {
+    it("returns its argument as a string", () => {
+      const expected = "string"
+      const actual = typeof Rooster.timeAtDawn(5)
+      assert.strictEqual(actual, expected)
+    })
+
+    it("throws an error if passed a number less than 0", () => {
+      assert.throws(Rooster.timeAtDawn(-1))
+    })
+
+    it("throws an error if passed a number greater than 23", () => {
+      assert.throws(Rooster.timeAtDawn(24))
+    })
+  })
+})
+```
+
+## Test-driven Development with Mocha 
