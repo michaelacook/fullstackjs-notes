@@ -215,4 +215,56 @@ describe("Rooster", () => {
 })
 ```
 
-## Test-driven Development with Mocha 
+## Server Testing
+- server tests only test the HTTP response
+- tests define expected behaviour of interactions and check actual responses against those expectations
+- commonly used to test APIs but can also be used to test responses for any backend
+- can also be used to test status codes and error messages
+- A common set of libraries for testing node servers are Chai, jsdom and SuperTest
+
+### Testing HTML Reponses
+- the jsdom library can be used to test HTML output from a server
+- [JSDOM: A Guide to How to Ge Started and What You Can Do](https://www.testim.io/blog/jsdom-a-guide-to-how-to-get-started-and-what-you-can-do/)
+- [jsdom docs](https://github.com/jsdom/jsdom)
+
+### SuperTest
+- used to test server responses 
+- [docs](https://www.npmjs.com/package/supertest)
+- `npm install supertest --save-dev`
+- To set up, pass the `app` instance of Express into the `request` object: 
+
+```js 
+const express = require("express")
+const app = express()
+
+request(app)
+  .get('/user')
+  .expect('Content-Type', /json/)
+  .expect('Content-Length', '15')
+  .expect(200)
+  .end(function(err, res) {
+    if (err) throw err
+  })
+```
+
+An example with mocha: 
+
+```js 
+describe('GET /user', () => {
+  it('responds with json', (done) => {
+    request(app)
+      .get('/user')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200, done);
+  })
+})
+```
+
+### Server Testing Patterns
+- it can be faster to test the server instead of writing feature tests that test the client 
+- you can test HTML output from the server after sending a test request using jsdom and supertest
+- server testing should always test status codes as this provides the most basic confidence that the server is responding properly 
+- e.g ```js assert.equal(response.status, 200);```
+- testing that the server produces the intended HTML (or JSON) output given specific url parameters, query parameters, HTTP headers, etc is also important
+  - when designing tests it is important to consider both intended and unintended behaviour
