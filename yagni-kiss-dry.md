@@ -116,3 +116,22 @@ if (!(a == true && (b == false || !(z < c || c == true)) && !d)) {
 ### Take Home 
 - You are not stupid. Your code should be stupid-simple 
 - It should be so simple that a junior developer can jump right in
+
+
+## Don't Repeat Yourself (DRY)
+- The DRY principle is stated as "Every piece of knowledge must have a single, unambiguous, authoritative representation within a system". [source](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself)
+- If you have to repeat a segment of code even just twice, then it is a sign that you need to assign it an address in memory and reuse it 
+- A codebase without repetition is a smaller codebase, all things equal
+- When DRY is properly implemented, changing one element of a program results in isolation from other "logically unrelated elements" and elements that are related are all changed because they have a single source
+- Violations of DRY are referred to as WET - "write every time" or "we enjoy typing"
+- [Is Your Code DRY or WET?](https://dzone.com/articles/is-your-code-dry-or-wet)
+- [DRY is about Knowledge](https://verraes.net/2014/08/dry-is-about-knowledge/) - very important article 
+  - Take-home message: identical code, when intended for different purposes, is fine and attempting to make it DRY could actually create problems
+  - Make code DRY when identical code is intended for the same purpose
+  - In some cases implementing DRY can result in closely coupling of functionality that you don't want when the indentical code in question is for different purposes and represent different knowledge
+- [The DRY Principle: Benefits and Costs with Examples](https://thevaluable.dev/dry-principle-cost-benefit-example/) - another important article 
+  - Take home: code duplication is not necessarily a violation of DRY 
+  - Duplicating business logic is a violation of DRY 
+  - Duplicating code that is not directly business logic, and duplicating code that has different concerns or different knowledge, is not a violation of dry
+  - Applying DRY everywhere, even when similar or duplicated code does not share the same knowledge or concerns, leads to coupling, and complexity
+  - Don't apply DRY with the purpose of generalizing or creating reusability when you do not yet have a reason to reuse. This is a violation of YAGNI - you aren't gonna need it
