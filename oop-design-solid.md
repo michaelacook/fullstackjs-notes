@@ -10,9 +10,17 @@
 - Polymophism 
   - [Object-oriented programming in JavaScript #3. Polymorphism](https://medium.com/@viktor.kukurba/object-oriented-programming-in-javascript-3-polymorphism-fb564c9f1ce8)
 
+- Summary: 
+  - Encapsulation: Groups related variables and functions into an object 
+  - Abstraction: Hides details and complexity to create a simple interface and reduce the impact of change 
+  - Inheritance: Eliminates redundant code by having similar kinds of objects inherit properties and methods from a shared "parent" 
+  - Polymorphism: Minimizes long conditionals by allowing objects with methods of the same name to behave differently for each object
+  - [How to explain object-oriented programming concepts to a 6-year-old](https://www.freecodecamp.org/news/object-oriented-programming-concepts-21bb035f7260/)
+
 ### Encapsulation 
-- Encapsulation refers to the ability to hide, or **encapsulate** the implementation of a functionality or data behind an interface like a class or a method 
-- Data and functionality can have restricted access 
+- Encapsulation refers to the ability to package, or **encapsulate** the implementation of a functionality or data behind an interface like a class or a function
+- Stated another way, encapsulation is when you package up related functionality of a program into an object, and only expose what is necessary for a client (another developer, another program, object, or function)
+- Data and functionality can have restricted access. In other words, the **state** of an object is internal and not available to the outside and clients using the object cannot direct access internal state. They can only interact with the object through specified public methods
 - An object's state is encapsulated, and therefore hidden 
 - Developers do not need to know how the functionality of an object is implemented to use it
 - JavaScript has no real ability to restrict access to data or methods, so developers mimick private or restricted access with a customary underscore prepended to the variable or method 
@@ -73,6 +81,10 @@ class MovieCollection
 ```
 
 ### Abstraction
+- [YouTube video explaining the difference between abstraction and encapsulation](https://www.youtube.com/watch?v=57SIpmA3vcg&ab_channel=BizofTech)
+- Primarily, in OOP design abstraction refers to implementation of logic or functionality being represented with an abstraction, usually a high-level method name that serves as an interface between the client and the actual implementation. The client only interacts with the interface (not an Interface contract, but a representation)
+- Similarly, when you use a coffee machine you don't interact with the hardware directly. There is an outer interface that abstracts away what the coffee machine is doing internally 
+- The `fetch` API provides a simple interface for making HTTP requests. It abstracts away the lower level functionality of creating and sending the HTTP request
 - Abstraction refers to creating an entity that has no concrete instantiation 
 - Abstract classes are classes that represent a concept without implementation, and cannot be directly instantiated
 - Interfaces are similar to abstract classes, except that in abstract classes heritable methods as well as abstract methods with no implementation can be written, but in interfaces only abstract methods can be written 
