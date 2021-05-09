@@ -176,3 +176,45 @@ class Programmer {
 - One interface, multiple implementations
 - For instance, a `Shape` class that has an `area()` method, and each new shape class that extends `Shape` implements its own `area()` method
 - Polymorphism is not based only on inheritance. It is possible to have many objects that all implement the same interface without extending or composing from a common parent
+
+# SOLID 
+- SOLID is an acronym for five fundamental principles of software development
+- They stand for: 
+  - Single Responsibility Principle 
+  - Open-Closed Principle 
+  - Liskov Substitution Principles 
+  - Interface Segregation Principle 
+  - Dependency Inversion Principle
+- Each of these is explored in this section 
+
+## Single Responsibilty Principle 
+- [Wikipedia article - good summary](https://en.wikipedia.org/wiki/Single-responsibility_principle)
+- A class or module should only have "one reason to change" 
+- Stated differently, a class or module should only be responsible for one component of an application 
+- Every class, function, module, and directory should have responsibility for a single part of the program's functionality 
+- Formulated by Robert C. Martin "Uncle Bob" in the book Principles of Object Oriented Design
+- The SRP is based on the principle of cohesion - that related code should occupy a single unit of software
+- A responsiblilty is a "reason to change" and is actually about people - who needs it to change? Only one person, or organization, should need a single module or class to change 
+  - i.e. only the accounting division needs the function `calculateTax` to change, no other department of the company
+  - Code that performs business tasks for different sections of a company should be separated out and grouped together by who needs it to change
+- If a verbal description of a class includes the word 'and', it is a sign that the class should be refactored into several independent classes 
+- Good application of the SRP ensures loose coupling of the components of software and prevents WET code and ensures that one division of the company's requests for a change don't impact the function of another department of the company
+- [article by Uncle Bob](https://blog.cleancoder.com/uncle-bob/2014/05/08/SingleReponsibilityPrinciple.html)
+  - Code that changes for the same reasons should be grouped together 
+  - Things that do not change for the same reasons should be separate from one another, so that a change to one part doesn't break the other 
+  - What this is really about is cohesion and coupling
+- Cohesion vs Coupling 
+  - [Cohesion and Coupling: The Difference](https://enterprisecraftsmanship.com/posts/cohesion-coupling-difference/)
+  - **cohesion**: the degree to which a part of a code base represents an atomic, logically singlular element
+    - In other words, cohesion is (truly) **related** parts being put together in a single unit 
+  - **coupling**: the degree to which a single unit of code is independent from others
+- A code base should have high cohesion, low coupling. Meaning that the various components or units of software should be completely independent of one another, and each unit should be logically singular
+- In other words, parts of a code base that are truly related should be kept in one place, and none of them should be aware of other modules, classes or components
+- It is impossible to completely decouple a codebase without damaging it's coherence 
+- It is also impossible to create perfect cohesion without introducing high coupling 
+- A balance between the two is the key to good code, which should have high (but not complete) cohesion and low (but not zero) coupling
+- To create a cohesive code base, boundaries between classes, modules, and directories, should reflect the semantics of their contents 
+  - This means boundaries between units of code should reflect their intended purpose
+- Destructure decoupling: attempting to decouple code so much that it leads to a lack of coherence
+  - In other words, code that is related and actually should form a single unit is separated out into separate classes or modules 
+  - This code is hard to read and understand
