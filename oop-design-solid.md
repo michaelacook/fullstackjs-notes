@@ -218,3 +218,13 @@ class Programmer {
 - Destructure decoupling: attempting to decouple code so much that it leads to a lack of coherence
   - In other words, code that is related and actually should form a single unit is separated out into separate classes or modules 
   - This code is hard to read and understand
+  
+## Open-Closed Principle
+- [wikipedia article](https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle)
+- Classes should be **open for extension** but **closed for modification** 
+- This means that if you need to modify a class to extend it's functionality, you're violating the principle
+- **Meyer's open-closed principle** (1988)
+  - a module is open if it is available for extension 
+  - a module is closed if it is available for use by other modules
+  - "A class is closed, since it may be compiled, stored in a library, baselined, and used by client classes. But it is also open, since any new class may use it as parent, adding new features. **When a descendant class is defined, there is no need to change the original or to disturb its clients**." (emphasis added)
+- **Polymophic open-closed principle** (1990s)

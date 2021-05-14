@@ -9,7 +9,7 @@
 - TypeScript files have the `.ts` extension 
 - Transcompilation is run with the `tsc` command
 
-## Type Inferences
+### Type Inferences
 - When a variable is initialized with a particular type, even if that type is not specified, TypeScript infers the type of the variable and will not allow it to be reassigned to another type
 - TypeScript always expects variables to remain the same type even when they change. This is how strongly typed languages like Java work
 - However if a variable is initialized with no value TypeScript will consider it's type to be `any` and not infer a type
@@ -22,7 +22,7 @@
   - `undefined`
 - TypeScript also knows the shape of objects and can throw errors and suggest useful corrections when attempting to access methods or properties on an object that don't exist
 
-## Variable Type Annotations 
+### Variable Type Annotations 
 - Variables can be given an annotation or declaration of type and TypeScript will use it to prevent reassignment to another type  
 - Type annotations use the following syntax: 
 
@@ -34,4 +34,20 @@ mustBeAString = 1337;
 // Error: Type 'number' is not assignable to type 'string'
 ```
 
-## `tsconfig.json`
+### `tsconfig.json`
+- TypeScript can be configured in a number of ways to provide flexibility 
+- the `tsconfig.json` file is always placed at the root of the project
+- allows you to customize what rules TypeScript applies 
+- e.g: 
+
+```json 
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "commonjs",
+    "strictNullChecks": true
+  },
+  "include": ["**/*.ts"]
+}
+```
+- when you run the `tsc` command with no arguments, it uses the `tsconfig.json` file to determine what files to transpile
