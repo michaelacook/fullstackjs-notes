@@ -228,3 +228,10 @@ class Programmer {
   - a module is closed if it is available for use by other modules
   - "A class is closed, since it may be compiled, stored in a library, baselined, and used by client classes. But it is also open, since any new class may use it as parent, adding new features. **When a descendant class is defined, there is no need to change the original or to disturb its clients**." (emphasis added)
 - **Polymophic open-closed principle** (1990s)
+  - implementations of interfaces can be changed and multiple implementations can be created and polymorphically substitutes for each other
+  - assumes inheritance from abstract base classes or interfaces
+  - the base class or interface is closed for modification but can be implemented differently and extended without modifying the parent
+  - [Uncle Bob's article The Open-Closed Principle (1996)](https://drive.google.com/file/d/0BwhCYaYDn8EgN2M5MTkwM2EtNWFkZC00ZTI3LWFjZTUtNTFhZGZiYmUzODc1/view)
+- A class or module should not have to be modified in order to integrate a new feature 
+- One way to avoid having to modify a class to introduce a new feature is to implement the Single Responsibility Principle 
+  - A class that does too many things may have to be modified; but a class that has **only one** responsibliity does not. It can simply be extended through inheritance to create new features without adding/modifying the base class

@@ -51,3 +51,5 @@ mustBeAString = 1337;
 }
 ```
 - when you run the `tsc` command with no arguments, it uses the `tsconfig.json` file to determine what files to transpile
+
+## Functions
