@@ -83,3 +83,36 @@ function multiply(x:number, y:number): number {
     This is a trivial example and only serves to demonstrate syntax.
 
 - to specify the return type of a function that only performs a side effect, use the `void` type 
+
+## Complex Types 
+- types like objects and arrays can be specified as well 
+- to specify an array of specific types, use the following syntax 
+
+```ts 
+const foo: string[] = ["make", "it", "so"]
+```
+
+- Alternative syntax 
+
+```ts 
+const foo: Array<string> = ["make", "it", "so"]
+```
+
+- to specify the member types of multi-dimensional arrays, keep adding `[]` to the type annotation n levels 
+
+```ts 
+const bar: string[][] = [
+  ["this"],
+  ["is"],
+  ["that"]
+]
+```
+
+- an array of any dimension can be initialized as an empty array, even though it's member types have been specified 
+
+```ts 
+const foobar: number[] = []
+// no error here
+```
+
+- 
