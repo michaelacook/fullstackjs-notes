@@ -53,3 +53,33 @@ mustBeAString = 1337;
 - when you run the `tsc` command with no arguments, it uses the `tsconfig.json` file to determine what files to transpile
 
 ## Functions
+- when declaring or defining functions, they often expect arguments of a certain type passed 
+- TypeScript makes JavaScript safer by allowing you to specify types for function parameters and function return values 
+- function parameters can be type annotated the same way regular variables are
+
+```ts 
+function greet(name: string) {
+  console.log(`Hello, ${name}!`)
+}
+```
+
+- TypeScript will throw an error by default if an expected argument isn't passed, but a parameter can be specified as optional using the `?` token 
+
+```ts 
+function greet(name: string) {
+  console.log(`Hello, ${name || 'Anonymous'}!`)
+}
+```
+
+- if a default argument is assigned to a parameter, TypeScript will infer the type of the parameter 
+- if no default argument is assigned and no type annotation given, TypeScript will assume the parameter can be `any` type 
+- TypeScript will also infer the type of the return value of a function, but a type can be specified explicitly as well 
+
+```ts 
+function multiply(x:number, y:number): number {
+  return x * y
+}
+```
+    This is a trivial example and only serves to demonstrate syntax.
+
+- to specify the return type of a function that only performs a side effect, use the `void` type 
