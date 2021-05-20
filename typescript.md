@@ -85,6 +85,8 @@ function multiply(x:number, y:number): number {
 - to specify the return type of a function that only performs a side effect, use the `void` type 
 
 ## Complex Types 
+
+### Arrays and Tuples
 - types like objects and arrays can be specified as well 
 - to specify an array of specific types, use the following syntax 
 
@@ -115,4 +117,54 @@ const foobar: number[] = []
 // no error here
 ```
 
-- 
+- TypeScript introduces the tuple data structure, which behaves identically to an array but which has a fixed length with it's types must appear in the order specified
+- Tuples can contain elements of the same or different types
+
+```ts 
+// a tuple 
+
+let foo: [number, string, number] = [5, "asdf", 5]
+
+foo = ["asdf", 5, 6]
+// throws an error
+
+foo = [5, "asdf"]
+// throws an error
+```
+
+- assigning an array to a tuple, even if they have the exact same shape, will throw an error because TypeScript treats tuples and arrays as different types
+- TypeScript always infers `[]` as an array by default. Tuples have to be specified since the tuple is the more restrictive type
+
+### Rest Parameters and Spread Operator
+- rest parameters are inferred as type `any` by default, but can be specified  
+
+```ts 
+const sumAllNumbers = (...numberList: number[]): number => {
+  let sum = 0
+  for (let i=0; i < numberList.length; i++) {
+    sum += numberList[i]
+  }
+  return sum
+}
+```
+
+- the spread operator can be used with tuples an an argument to a function that defines the types specified in the tuple in lock and key fashion 
+
+```ts 
+function modulo(dividend: number, divisor: number): number {
+  return dividend % divisor;
+}
+ 
+const numbers: [number, number] = [6, 4];
+ 
+// Call modulo() with a tuple
+console.log(modulo(numbers));
+// Error: Expected 2 arguments, but got 1.
+// Prints NaN
+ 
+// Call modulo() with spread syntax
+console.log(modulo(...numbers));
+// No error, prints 2
+```
+
+### `Enum` Type 
