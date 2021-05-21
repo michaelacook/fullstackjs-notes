@@ -66,7 +66,7 @@ function greet(name: string) {
 - TypeScript will throw an error by default if an expected argument isn't passed, but a parameter can be specified as optional using the `?` token 
 
 ```ts 
-function greet(name: string) {
+function greet(name?: string) {
   console.log(`Hello, ${name || 'Anonymous'}!`)
 }
 ```
