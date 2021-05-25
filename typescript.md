@@ -166,5 +166,154 @@ console.log(modulo(numbers));
 console.log(modulo(...numbers));
 // No error, prints 2
 ```
+### Custom Types
+- TypeScript allows developers to create custom types that can be enforced in addition to primitive types
 
-### `Enum` Type 
+#### `Enum` Type 
+- `enum`s represent an **enumeration** of all the values a variable could have
+- allows you to limit assignment of a variable to only pre-determined possibilities
+- e.g
+
+```ts
+enum Direction {
+  North,
+  South,
+  East,
+  West,
+  Northwest,
+  Northeast,
+  Southwest,
+  Southeast
+}
+
+let direction: Direction = Direction.North
+```
+
+- if your program requires direction input and you don't want the program to accept anything but what you define as a valid direction, the above `enum` will come in handy
+- under the hood the enum assigns each value to an index 
+
+```ts 
+enum Direction {
+  North = 0,
+  South = 1,
+  East = 2,
+  West= 3,
+  Northwest = 4,
+  Northeast = 5,
+  Southwest = 6,
+  Southeast = 7
+}
+
+Enum.North === const direction: Direction = 0
+```
+
+- the number values can also be set manually by the programmer
+- this is a numeric `enum` but string `enum`s are also possible, and are recommended because they are more strict 
+
+```ts 
+enum Direction {
+  North = "NORTH",
+  South = "SOUTH",
+  East = "EAST",
+  West = "WEST",
+  Northwest = "NORTHWEST",
+  Northeast = "NORTHEAST",
+  Southwest = "SOUTHWEST,
+  Southeast = "SOUTHEAST"
+}
+```
+
+- values assigned do not have to be uppercase, but it is the recommended convention 
+- numeric `enums` are less safe, as they allow a variable of the `enum` type to be assigned direcly to a number, and will allow numbers outside the range of indices in the specified `enum` to be assigned, opening up the possiblity of introducing avoidable bugs 
+- string `enums` can only be assigned to a value directly specified in the `enum`: 
+
+```ts 
+enum Direction {
+  North = "NORTH",
+  South = "SOUTH",
+  East = "EAST",
+  West = "WEST",
+  Northwest = "NORTHWEST",
+  Northeast = "NORTHEAST",
+  Southwest = "SOUTHWEST,
+  Southeast = "SOUTHEAST"
+}
+
+const direction: Direction = "EAST" 
+// Type Error
+
+const direction: Direction = Direction.East 
+// correct
+```
+
+#### `Object` Types 
+- `Object` types are the most common non-primitive type 
+- allow fine level control 
+- the object type can be specified with the following syntax 
+
+```ts 
+let car: {make: string, model: string, year: number}
+```
+
+- however, it is not necessary to specify the type this way every time, as it would lead to a potentially huge amount of repetition
+- types can be given a type alias and reused 
+
+```ts
+type Student = {
+  name: string,
+  age: number,
+  courses: string[]
+}
+
+const michael: Student = {
+  name: 'Michael', 
+  age: 31, 
+  courses: ['JavaScript', 'TypeScript']
+}
+```
+
+- type aliases can be used with any custom or primitive type
+
+#### `Function` Types 
+- You may want to strongly type a function, especially in cases where you are writing a function that takes a callback 
+- A function type can be specified using a type alias that defines parameters and a return type 
+
+```ts 
+type NumberArrayFunction = (numberArray: number[]) => number 
+```
+
+- it doesn't matter what the parameter name(s) are, as long as they are typed
+- any function that uses the function type specified must accept the same number and type of parameters and return the same type as specified
+- this is extremely useful when you need to enforce the parameters and return value of a callback
+
+#### Generics 
+- generics allow you to specify a complex type like an object, array or function where the inner types in the structure have not yet been specified, and can be specified at the time the developer uses the type 
+- put another way, generics allow the creation of reusable blocks of code that can be used with different types
+
+```ts 
+type Collection<T> = {
+  name: string,
+  quantity: number,
+  content: T[]
+}
+
+let primeNumberCollection: Collection<number> = {
+  name: 'First 5 Prime Numbers',
+  quantity: 5,
+  content: [2, 3, 5, 7, 11]
+}
+```
+
+- in the example, the property `content` can be given any type as needed, and is specified when the type is used as an annotation by passing it between brackets `<>`
+- in general, the placeholder for the generic type is `T` but this is just convention 
+- functions can be generic and allow for any type to be passed to the annotation when the function is called or assigned to a variable 
+
+```ts 
+
+// This is a generic function type alias
+function findMiddleMember<T>(members: T[]): T {
+  return members[Math.floor(members.length / 2)]
+}
+
+console.log(findMiddleMember<string>(['I', 'am', 'very', 'happy']))
+```
