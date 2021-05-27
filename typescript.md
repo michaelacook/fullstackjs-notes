@@ -317,3 +317,29 @@ function findMiddleMember<T>(members: T[]): T {
 
 console.log(findMiddleMember<string>(['I', 'am', 'very', 'happy']))
 ```
+- Generics are useful when you need a function or data structure that may use different data types at different times, but when you do pass it a data type you want it to be type-safe 
+- Generics are also very useful for functions that return promises 
+  - An async function or a function that is wrapped in a promise will always return a promise, which could resolve to any data type 
+  - You could add the type `Promise` to a function, but that still doesn't tell you what type the promise will actually resolve to. So specifying a generic is useful because it allows you to make the resolve value type-safe without knowing what the type will be in advance 
+  - e.g 
+  ```ts
+  async function queryEndpoint(url:string, method:string, payload?:object, query?:string): Promise<T> {
+    try {
+      const data = await api.query(url, method, payload)
+      return data
+    } catch (err) {
+      return err
+    }
+  }
+
+  const userId = queryEndpoint("/users/", "POST", {
+    name: "John Doe",
+    email: "email@email.com, 
+    password: "asdf"
+  })<number>
+
+  const user = queryEndpoint(`/users/${userId}`, "GET")<object>
+  ```
+  This isn't a fully realistic example but serves to show the usefulness of a generic in a situation like this
+
+## Union Types
