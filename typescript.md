@@ -343,3 +343,95 @@ console.log(findMiddleMember<string>(['I', 'am', 'very', 'happy']))
   This isn't a fully realistic example but serves to show the usefulness of a generic in a situation like this
 
 ## Union Types
+- A union type is the combination or merging or two or more types 
+- It allows the developer to specify a broader type that can handle more data than a single type while still maintaining type safety and a level of specificity 
+- Two or more types can be combined in a union using the `|` token 
+
+```ts 
+type Code = string | number;
+```
+
+- If a function can return more than one type, TypeScript infers it's type as a union 
+
+```ts 
+function unionReturnType(input: boolean) {
+  if (input) {
+    return "input is truthy"
+  } else {
+    return -1
+  }
+}
+```
+
+- specifying a union here is not really necessary. TypeScript already knows it's a union type because it can return either a `string` or a `number`
+- A function with a union type can use **type guards** to implement a concept called **type narrowing**  
+- Type narrowing is when you narrow down the union type within a block of code in the function where only methods and properties that can be used on the narrowed type are accessible 
+- The block of code where the narrowing happens is the type guard 
+
+```ts
+const choices: [string, string] = ['NO', 'YES']
+
+const processAnswer = (answer: number | boolean) => {
+  // type guard 1
+  if (typeof answer === 'number') {
+    console.log(choices[answer]);
+
+    // type guard 2
+  } else if (typeof answer === 'boolean') {
+    if (answer) {
+      console.log(choices[1]);
+    } else {
+      console.log(choices[0]);
+    }
+  }
+}
+processAnswer(true) // Prints "YES"
+processAnswer(0)
+// Prints "NO"
+```
+
+- inside each conditional checking the type of the parameter, only methods and properties available to that type will be accessible and any attempt to access properties or methods that inappropriate for that type will cause TypeScript to complain
+- Array members can be specified as a union type using the following syntax
+
+```ts 
+type NumbersAndStrings = (string | number)[];
+```
+
+- the parentheses are necessary, otherwise TypeScript will think your array can have **either** strings **or** numbers but not both
+- When types are combined in a union, only properties and methods common to all the member types will be available to the union type 
+- For instance 
+
+```ts 
+type ArrayAndString = any[] | string;
+```
+
+- given the above union type, the property `.length` will be available, but the method `.forEach` will not because only one member type supports it
+- This could be a significant gotcha so it's important to remember
+- Another example 
+
+```ts 
+type Goose = { 
+  isPettable: boolean
+  hasFeathers: boolean
+  canThwartAPicnic: boolean
+}
+ 
+type Moose = {
+  isPettable: boolean 
+  hasHoofs: boolean
+}
+ 
+const pettingZooAnimal: Goose | Moose = { isPettable: true }
+ 
+console.log(pettingZooAnimal.isPettable); // No TypeScript error
+console.log(pettingZooAnimal.hasHoofs); // TypeScript error
+```
+
+- in the example, `.hasHoofs` is only available on the `Moose` type and not the `Goose` type, so attempting to use it on `pettingZooAnimal` with a union type will cause TypeScript to complain, since only properties and methods of **common to both types** can be used on the union type
+- Union types support literals
+
+```ts 
+type Color = "red" | "yellow" | "green";
+```
+
+- This is useful when you want to limit what values a variable can have or definition some kind of application state
