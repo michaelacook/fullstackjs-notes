@@ -435,3 +435,58 @@ type Color = "red" | "yellow" | "green";
 ```
 
 - This is useful when you want to limit what values a variable can have or definition some kind of application state
+
+## Type Narrowing
+- TypeScript doesn't just check errors at compilation, it knows how code will behave at runtime 
+- This allows TypeScript to know what the type of a variable will be at runtime 
+- Because of this, TypeScript can narrow down a more specific type in a function that has a union type. The narrowing happens inside a type guard 
+- Normally, in a union type, only methods and properties that are common to both type members in the union are available. But inside a type guard, the union can be narrowed to one type member, making available properties and methods on the type member
+- Type guards take the form of a conditional that checks if a variable is a specific member type. This can be done with the `typeof` operator or the `in` operator 
+
+```ts 
+function formatCode(code: number | string) {
+  if (typeof code === "string") {
+    return code.toUpperCase() // this wouldn't be available outside the type guard since it's not supported by both member types in the union
+  } 
+
+  if (typeof code === "number") {
+    return code.toFixed(2) // same here
+  }
+}
+```
+
+- The `typeof` operator is only available on types `string` `number` `boolean` and `symbol`
+- For other types, use the `in` operator 
+
+```ts 
+type Cake = {
+  slice() => void
+}
+
+type IceCream = {
+  scoup() => void
+}
+
+function dispenseBirthdayTreats(treat: Cake | IceCream) {
+  if ("slice" in treat) {
+    return treat.slice()
+  } else {
+    return treat.scoup()
+  }
+}
+```
+
+- TypeScript does not need a second type guard to check for the `scoup` method in the example above. It is able to infer it after the `return` statement. 
+- TypeScript understands that that else block of an if statement must be the inverse condition of the if statement’s conditional
+- Similarly, TypeScript could infer the `scoup` type outside the `else` block, as long as the other type is returned beforehand 
+- TypeScript can narrow after a type guard if the type guard has a `return` or another terminal statement within its block, no `else` required
+
+```ts 
+function dispenseBirthdayTreats(treat: Cake | IceCream) {
+  if ("slice" in treat) {
+    return treat.slice()
+  }
+
+  return treat.scoup() // this is fine. TypeScript narrows the type because the other type has already been returned
+}
+```
