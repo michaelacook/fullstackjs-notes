@@ -490,3 +490,136 @@ function dispenseBirthdayTreats(treat: Cake | IceCream) {
   return treat.scoup() // this is fine. TypeScript narrows the type because the other type has already been returned
 }
 ```
+
+## Interfaces
+-[docs](https://www.typescriptlang.org/docs/handbook/2/objects.html)
+- Interfaces are another way to leverage types, but interfaces can only be used for objects
+- Interfaces are a contract: they specify abstract methods and properties, but don't specify implementation details. Any object that implements the interface must satisfy the contract and provide an implementation for the abstract methods and properties
+- A big part of the power of interfaces lies in their ability to abstract implementation of dependencies so that your class isn't tightly-coupled with another class. If a method on class A requires as an argument an instance of class B, you can create a looser coupling between class A and class B by creating an interface BInterface for class B that specifies the methods and return values it needs to have, without implementation. Then, class A's method can accept any object that implements BInterface, making classes A and B loosely, rather than tightly coupled 
+- Interfaces can also simply be used to give a type to an object in TS, however using the `type` keyword is juse as useful if your goal is only to provide type safety
+- Classes can implement an interface using the `implements` keyword
+- syntax
+
+```ts 
+
+interface IFooService {
+  sayHi: (name: string)
+}
+
+class FooService implements IFooService {
+  public sayHi(name) {
+    console.log(`Hi there, ${name}!`)
+  }
+}
+
+class Jabberwocky implements IFooService {
+  ... 
+
+  private sayHi(name) {
+    return `Hello, ${name}`
+  }
+
+  ...
+}
+
+const foo1: IFooService = new FooService()
+
+const foo2: IFooService = new Jabberwocky()
+
+```
+
+- In the example above, both classes implement `IFooService` correctly, though both are different classes that may have very different methods. But both implement `IFooService` and a function that requires an object of `IFooService` could receive either of these objects because the interface guarantees they implement the correct methods/properties
+- Interfaces can be infinitely nested 
+
+```ts 
+// This is a nested interface
+interface Course {
+  description: {
+    name: string;
+    instructor: {
+      name: string;
+    }
+    prerequisites: {
+      courses: string[];
+    }
+  }
+}
+```
+
+- Interfaces are composable, so individual interface abstract properties or methods can specify another interface as a type
+
+```ts
+/ Date is composed of primitive types
+interface Date { 
+  month: number;
+  day: number;
+  year: number
+}
+ 
+// Passport is composed of primitive types and nested with another interface
+interface Passport { 
+  id: string;
+  name: string;
+  citizenship: string;
+  expiration: Date;
+}
+ 
+// Ticket is composed of primitive types and nested with another interface
+interface Ticket {
+  seat: string;
+  expiration: Date;
+}
+ 
+// TravelDocument is nested with two other interfaces
+interface TravelDocument {
+  passport: Passport;
+  ticket: Ticket;
+}
+```
+
+- Interfaces can inherit from each other the same as classes can 
+
+```ts 
+interface Brand {
+  brand: string;
+}
+ 
+// Model inherits property from Brand
+interface Model extends Brand {
+  model: string;
+}
+ 
+// Car has a Model interface
+class Car implements Model {
+  brand;
+  model;
+  constructor(brand: string, model: string) {
+    this.brand = brand;
+    this.model = model;
+  }
+  log() {
+    console.log(`Drive a ${this.brand} ${this.model} today!`);
+  }
+}
+ 
+const myCar: Car = new Car('Nissan', 'Sentra'); 
+myCar.log(); // Prints "Drive a Nissan Sentra today!"
+```
+
+- Interfaces for objects in which you do not yet know the property names can still be specified with an index signature 
+
+```ts 
+interface Coordinates {
+  [prop: string]: number
+}
+```
+
+- In the example above, an object an implement this interface by having any number of string-keyed properties that have a number type. The interface doesn't need to know their property names in advance when an index signature is specified 
+- Index signatures enforce all properties on an object to have the same return type. If your object needs to have properties of different types, then the index signature will need to specify a union type
+- Interface properties can be optional using the `?` token 
+
+```ts 
+interface IBar {
+  stuff?: string[]
+}
+```
