@@ -220,7 +220,9 @@ class Programmer {
   - This code is hard to read and understand
   
 ## Open-Closed Principle
+- [The Open-Closed Principle by Robert C. Martin (1996)](https://web.archive.org/web/20060822033314/http://www.objectmentor.com/resources/articles/ocp.pdf)
 - [wikipedia article](https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle)
+- [Maintainable Code and the Open-Closed Principle](https://severinperez.medium.com/maintainable-code-and-the-open-closed-principle-b088c737262)
 - Classes should be **open for extension** but **closed for modification** 
 - This means that if you need to modify a class to extend it's functionality, you're violating the principle
 - **Meyer's open-closed principle** (1988)
@@ -235,3 +237,220 @@ class Programmer {
 - A class or module should not have to be modified in order to integrate a new feature 
 - One way to avoid having to modify a class to introduce a new feature is to implement the Single Responsibility Principle 
   - A class that does too many things may have to be modified; but a class that has **only one** responsibliity does not. It can simply be extended through inheritance to create new features without adding/modifying the base class
+- Example of the OCP being broken: 
+
+```ts
+class MonsterManager = {
+  constructor(monsters, locations) {
+    this.monsters = monsters
+    this.locations = locations
+  },
+  
+  private getRandomLocation () {
+    function getRandomInt(max) {
+      return Math.floor(Math.random() * Math.floor(max))
+    }
+    
+    return this.locations[getRandomInt(this.locations.length)]
+  },
+  
+  public rampageAll() {
+    this.monsters.forEach(function(monster) {
+      const location = this.getRandomLocation();
+      
+      if (Object.getPrototypeOf(monster) == Kaiju) {
+        console.log(
+          "The " + monster.type + " " + monster.name + 
+          " is rampaging through " + location + "!"
+        );
+      } else if (Object.getPrototypeOf(monster) == GreatOldOne) {
+        console.log(
+          "The " + monster.type + " " + monster.name +
+          " has awaken from its slumber in " + location + "!"
+        )
+      }
+    })
+  }
+}
+
+class Kaiju = {
+  constructor(name) {
+    this.name = name
+    this.type = "Kaiju"
+  }
+}
+
+class GreatOldOne = {
+  constructor(name) {
+    this.name = name
+    this.type = "Great Old One"
+  }
+}
+
+// Rampage!
+const monsters = []
+const locations = ["Athens", "Budapest", "New York", "Santiago", "Tokyo"]
+
+const rodan = new Kaiju("Rodan", "Rodan")
+monsters.push(rodan)
+
+const gzxtyos = new GreatOldOne("Gzxtyos", "Great Old One")
+monsters.push(gzxtyos)
+
+const myMonsterManager = new Monstger)
+myMonsterManager.init(monsters, locations)
+
+myMonsterManager.rampageAll()
+```
+
+- This is bad form, because the `MonsterManager` class is not extensible. If you try to pass another monster type not hard-coded, it will break 
+- Here is an example that leverages the OCP 
+
+```ts 
+abstract class Monster {
+  name: string
+
+  constructor(name: string) {
+    this.name = name
+  }
+
+  abstract rampage: (location: string) => void
+
+  getType() {
+    return Object.getPrototypeOf(this)
+  }
+}
+
+class MonsterManager = {
+  constructor(monsters: Monster[], locations: string[]) {
+    this.monsters = monsters
+    this.locations = locations
+  },
+  
+  private getRandomLocation () {
+    function getRandomInt(max) {
+      return Math.floor(Math.random() * Math.floor(max))
+    }
+    
+    return this.locations[getRandomInt(this.locations.length)]
+  },
+  
+  public rampageAll() {
+    this.monsters.forEach((monster) => {
+      const location = this.getRandomLocation()
+
+      monster.rampage(location)
+    })
+  }
+}
+
+class KaijuMonster extends Monster {
+  constructor(name: string) {
+    super()
+  }
+
+  public rampage(location) {
+    console.log(`The ${this.getType} monster ${this.name} rampages the city ${location}!`)
+  }
+}
+
+const monsters = [
+  new KaijuMonster("Valdomiro"),
+]
+
+const monsterManager = new MonsterManager(monsters, [
+  "Athens", "Budapest", "New York", "Santiago", "Tokyo"
+])
+```
+
+- Now as many monsters as you want to create can be extended from the `Monster` base class and the `MonsterManager` class doesn't care how a monster implements it's functions as long as it fulfils the requirements of it's type. `MonsterManager` is extensible because the `rampageAll` method can accept any kind of monster as long as it is a `Monster` type. There is loose coupling between monsters and the monster manager 
+- Monsters are also extensible because they all inherit from a base type and can implement any amount of functionality they want in their own way and still be consumable by any downstream object that accepts a `Monster` type
+- In summary, the OCP makes code more maintainable by allowing additional features and functionality to be added in such a way that does not break older parts of the code base. This is primarily done through abstractions. When an object has another object as a dependency, the dependency should be in charge of implementing it's algorithms or functionality and simply fulfil some kind of contract, such as an interface. Objects should thus always rely on abstractions rather than concretions. An object should only care what it's dependencies implement the correct properties and methods, and not ***how*** they implement them. Thus, when an object expects to interact with dependencies, those dependencies should either implement an interface or inherit from an abstract base class that guarantees the presence of required data and/or methods
+
+
+## Liskov Substitution Principle
+- [SOLID Class Design: The Liskov Substitution Principle](https://www.tomdalling.com/blog/software-design/solid-class-design-the-liskov-substitution-principle/)
+- [The Circle Ellipse Problem](https://en.wikipedia.org/wiki/Circle%E2%80%93ellipse_problem)
+- A type T should always be replaceable by any subtype S of T without altering any of the desirable properties of the program
+- E.g. given a supertype `User` and a subtype `Admin`, each instance of `User` should be replaceable with `Admin` in a program without any negative results
+- Barbara Liskov intended this as a general principle that does not always apply 
+- For instance, abstract classes have no instances, so if all subclasses inherit from a base abstract class, the rule is meaningless
+- Liskov refers to the LSP as behavioural subtyping: the behaviour of a supertype should be fully replaceable by the behaviour of a subtype
+- LSP means, generally, the following holds for super and subtypes:
+  - method parameters must be contravariant (cannot be different) 
+  - return values must be covariant (meaning they change together i.e two related types have a method that sometimes returns a string, sometimes a number, but both always under the same conditions)
+  - history constraint - methods on the subtype may not alter state that would not be permissible on the supertype
+- If proper typings are used, for instance if you're using TypeScript or a statically-typed language, then it should be fairly straight-forward to not violate the LSP
+- However, one way the principle may be violated is with a faulty inheritance hierarchy
+- Consider the Circle-Ellipse problem, in which an ellipse cannot be said to be a valid subtype of circle because a circle has a formula for perimeter while an ellipse does not. This same problem could be restated as the Bird-Penguin problem. Consider this class: 
+
+```ts 
+abstract class Bird {
+  abstract setLocation(longitude: number, latitude: number): void
+  abstract setAltitude(altitutde: number = 0): void
+  abstract draw(): void
+}
+```
+
+- This abstract class will work great as a base class for many `Bird` objects, but what happens with you want to model a Penguin class?
+
+```ts 
+class Penguin extends Bird {
+  // setAltitude becomes meaningless, since Penguins can't fly
+}
+```
+
+- When a subclass inherits from a superclass, but one or more of the methods/properties become meaningless or irrelevant, like in the case of `Penguin` extending `Bird`, it's a violation of the Liskov Substitution Principle because `Penguin` couldn't be substituted for `Bird` (ignoring the fact that `Bird` is abstract - in this example, even if `Bird` could be instantiated, `Penguin` would still not be a correct behavioural subtype of `Bird`)
+- Any time a method or property on a subtype can't be used or in some way is irrelevant or requires the supertype to be modified in some way to be functional, or if it throws an exception that is not thrown by the same method on the supertype, then you probably have a violation of the LSP 
+- Being careful about inheritance hierarchies can help prevent this problem. For instance, the problem in the example above could be fixed like this: 
+
+```ts 
+interface IFlyer {
+  fly(): void
+}
+
+interface IGroundDweller {
+  move(): void
+}
+
+abstract class Bird {
+  abstract setLocation(longitude: number, latitude: number): void
+  draw(): void
+}
+
+class Bluejay extends Bird Implements IFlyer {
+  public fly(): void {
+    // do fly logic
+  }
+}
+
+class Penguin extends Bird Implements IGroundDweller {
+  public move(): void {
+    // do move logic
+  }
+}
+```
+
+- or the problem could be solved this way: 
+
+```ts 
+abstract class Bird {
+  abstract setLocation(longitude: number, latitude: number): void
+  draw(): void
+}
+
+class FlyingBird extends Bird {
+  fly(): void {}
+}
+
+class GroundDwellingBird extends Bird {
+  waddle(): void {}
+}
+
+```
+
+- In either case, the inheritance hierarchy is more complex than the first example, but the added complexity is needed to fix the inheritance hierarchy so that any type of bird can be created that can behaviourally replace the base class 
+- `FlyingBird` and `GroundDwellingBird` are both capable of behaviourally replacing `Bird` (again ignoring that it's an abstract class) because each subtype contains everything in the supertype plus additional functionality 
+- It is generally a good idea to create slim base classes and allow individual subtypes to specify the functionality they need 
+- This is similar to the OCP, in which it is best to allow dependency objects to implement their functionality indivdually, and write your client objects to rely on abstractions like an interface
+- Stated more generally, in object-oriented design many problems can be solved by delegating functionality to appropriate objects. Each object should have a single responsibility that it implements a solution for, and client classes should call dependency methods 
