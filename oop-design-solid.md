@@ -382,7 +382,7 @@ const monsterManager = new MonsterManager(monsters, [
   - history constraint - methods on the subtype may not alter state that would not be permissible on the supertype
 - If proper typings are used, for instance if you're using TypeScript or a statically-typed language, then it should be fairly straight-forward to not violate the LSP
 - However, one way the principle may be violated is with a faulty inheritance hierarchy
-- Consider the Circle-Ellipse problem, in which an ellipse cannot be said to be a valid subtype of circle because a circle has a formula for perimeter while an ellipse does not. This same problem could be restated as the Bird-Penguin problem. Consider this class: 
+- Consider the Circle-Ellipse problem, in which a circle cannot properly be a subtype of an ellipse, because an ellipse must have capabilities that would break it. Ellipses must be able to stretch their axes, but doing so will make the circle into a non-circle. Thus a circle can't implement the behavioural requirements of an ellipse. This same problem could be restated as the Bird-Penguin problem, in which a Penguin class cannot implement the behavioural requirements of a Bird without ceasing to be a Penguin. Consider this class: 
 
 ```ts 
 abstract class Bird {
@@ -400,8 +400,9 @@ class Penguin extends Bird {
 }
 ```
 
-- When a subclass inherits from a superclass, but one or more of the methods/properties become meaningless or irrelevant, like in the case of `Penguin` extending `Bird`, it's a violation of the Liskov Substitution Principle because `Penguin` couldn't be substituted for `Bird` (ignoring the fact that `Bird` is abstract - in this example, even if `Bird` could be instantiated, `Penguin` would still not be a correct behavioural subtype of `Bird`)
+- When a subclass inherits from a superclass, but one or more of the methods/properties become meaningless, irrelevant, or cause the subtype to cease to be what is is, like in the case of `Penguin` extending `Bird`, it's a violation of the Liskov Substitution Principle because `Penguin` couldn't be substituted for `Bird` (ignoring the fact that `Bird` is abstract - in this example, even if `Bird` could be instantiated, `Penguin` would still not be a correct behavioural subtype of `Bird`)
 - Any time a method or property on a subtype can't be used or in some way is irrelevant or requires the supertype to be modified in some way to be functional, or if it throws an exception that is not thrown by the same method on the supertype, then you probably have a violation of the LSP 
+- Stated differently, if a supertype has some functionality that, when applied to a subtype, would force the subtype not to be what it's supposed to be, it's a violation of the LSP. In this case, a Penguin forced to implement a flying capability would no longer be a Penguin
 - Being careful about inheritance hierarchies can help prevent this problem. For instance, the problem in the example above could be fixed like this: 
 
 ```ts 
@@ -454,3 +455,48 @@ class GroundDwellingBird extends Bird {
 - It is generally a good idea to create slim base classes and allow individual subtypes to specify the functionality they need 
 - This is similar to the OCP, in which it is best to allow dependency objects to implement their functionality indivdually, and write your client objects to rely on abstractions like an interface
 - Stated more generally, in object-oriented design many problems can be solved by delegating functionality to appropriate objects. Each object should have a single responsibility that it implements a solution for, and client classes should call dependency methods 
+
+
+## Interface Segregation Principle
+- [The Interface Segregation Principle, Robert Martin (1996)](https://drive.google.com/file/d/0BwhCYaYDn8EgOTViYjJhYzMtMzYxMC00MzFjLWJjMzYtOGJiMDc5N2JkYmJi/view?resourcekey=0-3H2Ld4l-dIZZVRmHSpNLcA)
+- No client object should be required to depend on methods it doesn't use 
+- Stated another way, when a class implements an interface, the class should be written such that it actually needs and uses every property and method specified on the interface 
+- If a class only needs a portion of the functionality on the interface, it's a sign that the interface is too fat and it's functionality should be segregated into multiple interfaces
+- Therefore, functionality should be split up into specific thin interfaces called ***role interfaces*** 
+- This leads to lower coupling of systems and easier refactoring
+- When not working with interfaces and only classes, such as in JavaScript, classes should be broken up into smaller role classes and objects should be composed from role objects rather than inheriting from a fat class
+- Objects can be composed of smaller role objects by adding role objects to a client object's prototype 
+- E.g: 
+
+```js 
+class Character {
+  constructor(name) {
+    this._name = name
+  }
+}
+
+class Mover {
+  move(name) {
+    console.log(`${name} moved`)
+  }
+}
+
+class Attacker {
+  attack(target) {
+    console.log(`${target} has taken damage`)
+  }
+}
+
+class Michael extends Person {
+  constructor(name) {
+    super(name)
+  }
+}
+
+Object.assign(Michael.prototype, new Mover())
+Object.assign(Michael.prototype, new Attacker())
+```
+
+- The above example demonstrates composition as a way to combine slim modular classes into larger modules as needed while keeping implementation separate and therefore loosely coupled and easily maintained
+- In the composition example, different objects could be composed with only the modules they need rather than inheriting from a bloated class containing methods they don't need or implementing a large interface
+- A major benefit of composing objects from smaller role objects, or using small role interfaces, is that they make your code less likely to break the Liskov Substitution Principle because smaller interfaces (or objects) are easy to fully implement
