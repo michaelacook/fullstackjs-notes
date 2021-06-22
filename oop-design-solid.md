@@ -500,3 +500,104 @@ Object.assign(Michael.prototype, new Attacker())
 - The above example demonstrates composition as a way to combine slim modular classes into larger modules as needed while keeping implementation separate and therefore loosely coupled and easily maintained
 - In the composition example, different objects could be composed with only the modules they need rather than inheriting from a bloated class containing methods they don't need or implementing a large interface
 - A major benefit of composing objects from smaller role objects, or using small role interfaces, is that they make your code less likely to break the Liskov Substitution Principle because smaller interfaces (or objects) are easy to fully implement
+
+
+## Dependency Inversion Principle 
+- High level modules (client objects) should not depend on low level modules (dependencies)
+- Both high and low level modules should depend on abstractions 
+- [The Dependency Inversion Principle, Robert C. Martin](https://drive.google.com/file/d/0BwhCYaYDn8EgMjdlMWIzNGUtZTQ0NC00ZjQ5LTkwYzQtZjRhMDRlNTQ3ZGMz/view?resourcekey=0-jRJy8Mi4CltX8KX84BqLFQ)
+- [Dependency inversion principle Wikipedia](https://en.wikipedia.org/wiki/Dependency_inversion_principle)
+- [SOLID Design Principles Explained: Dependency Inversion Principle with Code Examples](https://stackify.com/dependency-inversion-principle/)
+- [Very helpful YouTube video](https://www.youtube.com/watch?v=NnZZMkwI6KI&ab_channel=IAmTimCoreyIAmTimCorey)
+- [Another helpful YouTube video](https://www.youtube.com/watch?v=S9awxA1wNNY)
+- [A helpful video with vanilla JavaScript examples](https://www.youtube.com/watch?v=9oHY5TllWaU&ab_channel=WebDevSimplifiedWebDevSimplifiedOfficialArtistChannel)
+
+- Here's an example of conventional layered architecture: 
+
+```ts
+import { UserService } from "./User.service"
+
+// high level module
+export class UserController {
+  private service
+
+  constructor() {
+    this.service = new UserService()
+  }
+
+  @Get("/:id")
+  public async getUser(req, res, next) {
+    const user = await this.service.findOne(req.params.id)
+    return res.json(user)
+  }
+}
+
+-----------------------------------------------------------
+
+import { User } from "./User.model"
+
+// lower level module
+export class UserService {
+  private model
+
+  constructor() {
+    this.model = User
+  }
+
+  public async findOne(id) {
+    return await model.findOne(id)
+  }
+}
+```
+
+- In the example, UserController depends directly on the UserService module. Even though this works well and feels natural, it violates the Dependency Inversion principle
+- This is bad because it means that UserController and UserService are tightly coupled, making UserController hard to reuse and easily broken if UserService changes 
+- Instead, UserController should depend on an interface (abstraction) and any module that satisfies the interface contract that UserController relies on can be passed into UserController as the service 
+- The `new` keyword should only be used in one place, usually at the very top level of the application. Instantiating concretions in a high level module breaks the DI principle because even when using interfaces, it still couples your high level module to a concrete instance of a low level module.
+-  In most cases, especially when using a framework (such as NestJS, Spring, Laravel, .NET) the framework will automatically inject dependencies for you. If you are not using a framework, then at the top of your application you would have some kind of factory class that exposes methods that return instances of all your dependencies and injects them into client objects 
+- Here is the above example refactored to satisfy the DI principle:
+
+```ts 
+export interface IDataStoreService {
+  findOne(id: number): Promise<T>
+}
+
+------------------------------------------------------------------
+import { IDataStoreService} from "./IDataStoreService.interface"
+
+export class UserController {
+  private service
+
+  constructor(service: IDataStoreService) {
+    this.service = service
+  }
+
+  @Get("/:id")
+  public async getUser(req, res, next) {
+    const user = await this.service.findOne(req.params.id)
+    return res.json(user)
+  }
+}
+
+------------------------------------------------------------------
+import { IDataStoreService} from "./IDataStoreService.interface"
+
+export class UserService implements IDataStoreService {
+  private model 
+
+  constructor(model: User) {
+    this.model = model
+  }
+
+  public async findOne(id) {
+    return await model.findOne(id)
+  }
+}
+
+```
+
+- Notice in the above example that you cannot find the `new` keyword anywhere. The example does not contain it, but as stated above, at the top level of the application these classes would be instantiated and the `UserController` constructor would be passed an instance of it's dependency by some kind of injector module 
+- This means that `UserService` is decoupled from `UserController` since the latter does not reply directly on an instance of the former, but will be passed some kind of module by a factory that satisfies the `IDataStoreService` interface, and it doesn't matter what module that is, as long as it satisfied the interface contract
+- This is also not the only way of implementing the DI Principle, but the implementation here is the most elegant for a TypeScript server application
+- The Dependency Injection design pattern is one way to achieve dependency inversion, but it is not the only way to achieve it
+- [A quick intro to Dependency Injection: what it is, and when to use it](https://www.freecodecamp.org/news/a-quick-intro-to-dependency-injection-what-it-is-and-when-to-use-it-7578c84fa88f/)
