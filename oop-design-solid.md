@@ -508,9 +508,11 @@ Object.assign(Michael.prototype, new Attacker())
 - [The Dependency Inversion Principle, Robert C. Martin](https://drive.google.com/file/d/0BwhCYaYDn8EgMjdlMWIzNGUtZTQ0NC00ZjQ5LTkwYzQtZjRhMDRlNTQ3ZGMz/view?resourcekey=0-jRJy8Mi4CltX8KX84BqLFQ)
 - [Dependency inversion principle Wikipedia](https://en.wikipedia.org/wiki/Dependency_inversion_principle)
 - [SOLID Design Principles Explained: Dependency Inversion Principle with Code Examples](https://stackify.com/dependency-inversion-principle/)
+- [SOLID Principles: Dependency Inversion Principle](https://dzone.com/articles/solid-principles-dependency-inversion-principle)
 - [Very helpful YouTube video](https://www.youtube.com/watch?v=NnZZMkwI6KI&ab_channel=IAmTimCoreyIAmTimCorey)
 - [Another helpful YouTube video](https://www.youtube.com/watch?v=S9awxA1wNNY)
 - [A helpful video with vanilla JavaScript examples](https://www.youtube.com/watch?v=9oHY5TllWaU&ab_channel=WebDevSimplifiedWebDevSimplifiedOfficialArtistChannel)
+- [JavaScript dependency injection in Node.js – friend or foe?](https://tsh.io/blog/dependency-injection-in-node-js/)
 
 - Here's an example of conventional layered architecture: 
 
