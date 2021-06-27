@@ -1,5 +1,5 @@
 # Common Design Patterns 
-This set of notes details some of the fundamental design patterns every programming should know. Most examples are in TypeScript.
+This set of notes details some of the fundamental design patterns every programmer should know. Most examples are in TypeScript.
 
 ## What are design patterns?
 - [What's a design pattern?](https://refactoring.guru/design-patterns/what-is-pattern)
