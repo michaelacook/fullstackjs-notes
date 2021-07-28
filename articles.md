@@ -23,3 +23,4 @@
 - [Understanding Variables, Scope and Hoisting in JavaScript](https://www.taniarascia.com/understanding-variables-scope-hoisting-in-javascript/)
 - [Understanding This, Bind, Call, and Apply in JavaScript](https://www.taniarascia.com/this-bind-call-apply-javascript/)
 - [Understanding the Event Loop, Callbacks, Promises, and Async/Await in JavaScript](https://www.taniarascia.com/asynchronous-javascript-event-loop-callbacks-promises-async-await/)
+- [How Hoisting Works With ‘let’ and ‘const’ in Javascript](https://outline.com/dA2rGR)

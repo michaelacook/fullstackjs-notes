@@ -11,6 +11,7 @@ This set of notes details some of the fundamental design patterns every programm
   - 2. Motivation further explains the problem and the solution the pattern makes 
   - 3. Structure of classes shows each part of the pattern and how they are related 
   - 4. A code example in a popular programming language to illustrate
+- [JavaScript design patterns](https://www.dofactory.com/javascript/design-patterns)
 
 ## Seven most important patterns 
 -[The 7 Most Important Software Design Patterns](https://medium.com/educative/the-7-most-important-software-design-patterns-d60e546afb0e)
@@ -104,4 +105,22 @@ Object.freeze(SingletonInstance)
 export default SingletonInstance
 ```
 
-- There is a major downside to using this approach though, which is that while it prevents new instances of the class, it also prevents you can 
+## Builder
+- [Builder](https://refactoring.guru/design-patterns/builder)
+- [helpful YouTube video](https://www.youtube.com/watch?v=M7Xi1yO_s8E&ab_channel=WebDevSimplified)
+- [JavaScript Builder](https://www.dofactory.com/javascript/design-patterns/builder)
+- A creational pattern
+- For constructing complex objects step by step
+- The problem: sometimes you need really complex objects that are hard to construct 
+  - Imagine an object that represents a house. Houses are very complex buildings: they have many rooms and parts, electrical systems, heating and cooling systems, some have pools, some have other outdoor features, etc 
+  - To create objects to represent all the different variations of types and features you would need a lot of subclasses that extend a base class `House` 
+  - Otherwise, you would need one class with a massive unwieldy constructor with a lot of parameters 
+  - Neither of these scenarios is ideal 
+- The solution: the Builder pattern in which you extract the code for creating the object into separate objects called ***builders***
+  - Builders create individual components of the complex object, and not all builders need to be called each time 
+  - the building of the object is broken up so that you can call the builders you need for the particular object you're creating 
+  - Because you may have many different builders that create different variations of an object, you can also have classes called Directors that define the order in which to call specific construction routines that can be reused, although this is not always necessary and often builders can be called directly by the client class
+- Use the Builder pattern when construction of various representations of an object involves similar steps that differ only in the details
+- Use the Builder pattern when you have a large and complex object with a lot of properties
+- You can also use the Builder pattern when you want to create many different representations of an object that have variations or need different ordered steps and configurations
+- This set of notes does not go into much detail. Consult the article for a more detailed discussion of how to implement 
