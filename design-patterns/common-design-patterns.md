@@ -124,3 +124,68 @@ export default SingletonInstance
 - Use the Builder pattern when you have a large and complex object with a lot of properties
 - You can also use the Builder pattern when you want to create many different representations of an object that have variations or need different ordered steps and configurations
 - This set of notes does not go into much detail. Consult the article for a more detailed discussion of how to implement 
+
+## Factory Method 
+- [Factory Method wikipedia entry](https://en.wikipedia.org/wiki/Factory_method_pattern)
+- [Factory Method Refactoring Guru](https://refactoring.guru/design-patterns/factory-method)
+- [Factory Method dofactory](https://www.dofactory.com/javascript/design-patterns/factory-method)
+- [Factory Method in Python - useful for any language](https://realpython.com/factory-method-python/)
+- [Helpful YouTube tutorial](https://www.youtube.com/watch?v=ub0DXaeV6hA&ab_channel=DerekBanas)
+- [Another helpful YouTube tutorial](https://www.youtube.com/watch?v=xN7EFHU_rXA&ab_channel=RawCoding)
+- Also known as the Virtual Constructor pattern
+- Creational pattern 
+- For dynamically calling constructors when you don't know which class constructor you will need to call until runtime
+- Consider a situation in which you have a single base class or an interface and a number of derived classes. Derived classes need to be created dynamically at runtime. The Factory Method pattern abstracts away object creation to a factory method on the base class that handles which class to dynamically instantiate at runtime
+- For instance, a cross-platform UI library that works on web, mobile and desktop. A dialog box needs buttons, but buttons are created very differently on different platforms (i.e, HTML on web, XML mobile, etc)
+- When a dialog box is created for a specific platform, it should automatically have the correct type of buttons on it. Instead of achieving this with a lot of conditionals, you can use a factory method: 
+
+```js 
+export interface IDialog {
+  text: string
+  open(): void 
+  close(): void 
+  render(): void
+  createButton(): Button
+}
+
+export interface IButton {
+  click(): void 
+  render(text: string): void
+}
+
+export class WebButton implements IButton {
+  public click(callback): void {
+    callback()
+  }
+
+  public render(text: string): void {
+    document.dialog.append(`<button>${text}</button>`)
+  }
+}
+
+export class Dialog implements IDialog {
+  public text: string;
+
+  constructor (text: string) {
+    this.text = text
+  }
+
+  abstract public createButton() {}
+
+  public open(): void {}
+
+  public close(): void {}
+
+  public render(): void {}
+}
+
+// override the createButton method and return an HTML button
+export class WebDialog extends Dialog {
+  public createButton(): Button {
+    return new WebButton()
+  }
+}
+```
+
+- Every dialog extending the base `Dialog` class will have to implement the `createButton` factory method, but each implementation will create the type of button appropriate to it's OS platform
+- These notes are minimal. For more information, consult the material listed above
