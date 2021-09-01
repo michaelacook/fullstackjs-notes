@@ -189,3 +189,81 @@ export class WebDialog extends Dialog {
 
 - Every dialog extending the base `Dialog` class will have to implement the `createButton` factory method, but each implementation will create the type of button appropriate to it's OS platform
 - These notes are minimal. For more information, consult the material listed above
+
+## Decorator Pattern
+- [Decorator pattern - Wikipedia entry](https://en.wikipedia.org/wiki/Decorator_pattern)
+- [Refactoring Guru - Decorator Pattern](https://refactoring.guru/design-patterns/decorator)
+- [Helpful YouTube tutorial](https://www.youtube.com/watch?v=j40kRwSm4VE&ab_channel=DerekBanas)
+- [Pizza example in Java](http://www.newthinktank.com/2012/09/decorator-design-pattern-tutorial/)
+- A structural design pattern
+- The Decorator pattern is a more flexible alternative to inheritance that allows you to add behaviour to an individual object rather than a class and therefore all objects instantiated from that class 
+- It allows you to dynamically add functionality to an object at run-time
+- Decorators are wrapper objects that can contain an instance of another object and give them extra functionality
+- "Decorator is a structural design pattern that lets you attach new behaviors to objects by placing these objects inside special wrapper objects that contain the behaviors." - Refactoring Guru
+- With decorators you separate functionality into layers, or separate classes with single responsibilities and then compose objects from a base object and decorators implementing a common interface
+- Adding decorators to an object never causes a break when a client object consumes it, precisely because each decorator wrapping the base object implements a common interface, simply extending or overriding the base object's methods
+- To implement the decorator pattern, you create an interface that will be implemented both by the class whose functionality you want to extend, as well as the base class for all decorator objects 
+  - Create an abstract decorator class that implements the interface, and then extend the abstract decorator class for each concrete decorator, overriding it's methods to add the desired functionality 
+- E.g
+
+
+```js 
+// All pizzas and all topping decorators must implement this interface
+interface IPizza {
+  getCost(): number 
+  getDescription(): string
+}
+
+// a basic pizza that we will want to add toppings to
+class BasicPizza implements IPizza {
+  public getCost(): number {
+    return 5
+  }
+
+  public getDescription() {
+    "Thin crust and mozzarella pizza"
+  }
+}
+
+// base decorator class
+// all decorators adding individual behaviours will extend this class and override it's methods
+abstract class ToppingDecorator implements IPizza {
+  protected pizza
+
+  constructor(pizza: IPizza) {
+    this.pizza = pizza
+  }
+
+  public getDescription(): string {
+    return this.pizza.getDescription()
+  }
+
+  public getCost(): number {
+    return this.pizza.getCost()
+  }
+}
+
+class Pepperoni extends ToppingDecorator {
+  constructor(pizza: IPizza) {
+    super()
+  }
+
+  public getDescription: string {
+    return this.pizza.getDescription() + ", and pepperoni"
+  }
+
+  public getCost: number {
+    return this.pizza.getCost() + 1.5
+  }
+}
+
+// a pepperoni pizza composed from the basic pizza and a decorator 
+const pepperoniPizza = new Pepperoni(new BasicPizza())
+```
+
+- the Decorator pattern allows functionality to be extended without the pitfalls of using inheritance 
+- it preserves the Open/Closed principle by structuring your objects in such a way as to be extensible without needing to be internally modified 
+- it preserves the Single Responsibility principle by delegating different functionalities to many separate classes
+- multiple inheritance does not exist in most languages; decorators allow inheriting behaviour from multiple objects without needing inheritance
+- use the decorator pattern when you need to dynamically add a behaviour to an object without modifying it's class or breaking client code 
+- use the decorator pattern when you need to extend the behaviour of an object but inheritance is not feasible or creates additional problems, breaks client code, etc
